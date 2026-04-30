@@ -2,207 +2,133 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Exalt Coin Mining</title>
+<title>Exalt Mining</title>
+
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
 
 <style>
-body{background:#111;color:white;font-family:Arial;text-align:center}
-.box{max-width:430px;margin:50px auto;background:#1b1b1b;padding:30px;border-radius:20px;box-shadow:0 0 35px #ff6a00}
-h1{color:#ff8c00}
-.circle{width:150px;height:150px;border:6px solid #ff8c00;border-radius:50%;margin:25px auto;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:bold}
-button{width:100%;padding:16px;margin:8px 0;border:0;border-radius:10px;background:linear-gradient(90deg,#ff6a00,#ffb000);font-weight:bold;cursor:pointer}
-button:disabled{background:#555;color:white}
-#status{font-size:14px;margin-top:15px}
+body{background:#111;color:#fff;font-family:Arial;text-align:center}
+.box{max-width:420px;margin:50px auto;padding:30px;background:#1b1b1b;border-radius:20px;box-shadow:0 0 30px orange}
+h1{color:orange}
+.circle{width:140px;height:140px;border:6px solid orange;border-radius:50%;margin:20px auto;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold}
+button{width:100%;padding:14px;margin:6px 0;border:0;border-radius:10px;background:linear-gradient(90deg,orange,#ffb347);font-weight:bold;cursor:pointer}
+#status{font-size:13px;margin-top:10px}
 </style>
+
 </head>
 
 <body>
 
 <div class="box">
 <h1>Exalt Coin Mining</h1>
-<p id="walletText">Wallet not connected</p>
 
-<div class="circle" id="stateText">OFF</div>
+<p id="wallet">Wallet not connected</p>
 
-<h2><span id="rewardText">0.000000</span> EXALT</h2>
+<div class="circle" id="state">OFF</div>
+
+<h2><span id="reward">0.000000</span> EXALT</h2>
 
 <button onclick="connectWallet()">Connect Wallet</button>
 <button onclick="startMining()">Start Mining</button>
 <button onclick="claimReward()">Claim Reward</button>
 <button onclick="stopMining()">Stop Mining</button>
 
-<p id="status">Please connect your wallet</p>
+<p id="status">Connect wallet first</p>
 </div>
 
 <script>
-const MINING_CONTRACT = "0x08002d47650086196Eb966b33028b951fff20ADB";
-const BSC_CHAIN_ID = "0x38";
+
+const CONTRACT = "0x08002d47650086196Eb966b33028b951fff20ADB";
+const CHAIN = "0x38";
 
 const ABI = [
-  "function startMining() external",
-  "function stopMining() external",
-  "function claimReward() external",
-  "function pendingReward(address) view returns (uint256)",
-  "function isMining(address) view returns (bool)"
+ "function startMining() external",
+ "function stopMining() external",
+ "function claimReward() external",
+ "function pendingReward(address) view returns(uint256)",
+ "function isMining(address) view returns(bool)",
+ "function lastUpdate(address) view returns(uint256)",
+ "function rewardPerSecond() view returns(uint256)"
 ];
 
-let provider;
-let signer;
-let contract;
-let userAddress;
-let timer;
+let provider, signer, contract, user;
 
-async function switchToBSC() {
-  if (!window.ethereum) {
-    alert("MetaMask install کریں");
-    return;
-  }
+async function connectWallet(){
+ try{
+  await window.ethereum.request({
+   method:"wallet_switchEthereumChain",
+   params:[{chainId:CHAIN}]
+  });
 
-  try {
-    await window.ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: BSC_CHAIN_ID }]
-    });
-  } catch (error) {
-    if (error.code === 4902) {
-      await window.ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [{
-          chainId: BSC_CHAIN_ID,
-          chainName: "BNB Smart Chain",
-          nativeCurrency: {
-            name: "BNB",
-            symbol: "BNB",
-            decimals: 18
-          },
-          rpcUrls: ["https://bsc-dataseed.binance.org/"],
-          blockExplorerUrls: ["https://bscscan.com/"]
-        }]
-      });
-    } else {
-      throw error;
-    }
-  }
+  provider=new ethers.BrowserProvider(window.ethereum);
+  await provider.send("eth_requestAccounts",[]);
+  signer=await provider.getSigner();
+  user=await signer.getAddress();
+
+  contract=new ethers.Contract(CONTRACT,ABI,signer);
+
+  document.getElementById("wallet").innerText=user;
+  document.getElementById("status").innerText="Wallet connected";
+
+  setInterval(update,3000);
+
+ }catch(e){
+  document.getElementById("status").innerText="Wallet error";
+ }
 }
 
-async function connectWallet() {
-  try {
-    await switchToBSC();
+async function update(){
+ if(!contract) return;
 
-    provider = new ethers.BrowserProvider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
+ let mining=await contract.isMining(user);
+ let pending=await contract.pendingReward(user);
 
-    signer = await provider.getSigner();
-    userAddress = await signer.getAddress();
+ let total=pending;
 
-    contract = new ethers.Contract(MINING_CONTRACT, ABI, signer);
+ if(mining){
+  let last=await contract.lastUpdate(user);
+  let rate=await contract.rewardPerSecond();
+  let now=Math.floor(Date.now()/1000);
+  let diff=BigInt(now)-BigInt(last);
+  total=BigInt(pending)+(diff*BigInt(rate));
+ }
 
-    document.getElementById("walletText").innerText =
-      userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
-
-    document.getElementById("status").innerText = "Wallet connected";
-
-    await checkMiningStatus();
-    await updateReward();
-
-    clearInterval(timer);
-    timer = setInterval(updateReward, 3000);
-
-  } catch (err) {
-    console.error(err);
-    document.getElementById("status").innerText = "Wallet connect failed";
-  }
+ document.getElementById("state").innerText=mining?"ON":"OFF";
+ document.getElementById("reward").innerText=
+ Number(ethers.formatUnits(total,18)).toFixed(6);
 }
 
-async function checkMiningStatus() {
-  if (!contract || !userAddress) return;
-
-  try {
-    const mining = await contract.isMining(userAddress);
-    document.getElementById("stateText").innerText = mining ? "ON" : "OFF";
-  } catch (err) {
-    console.error(err);
-  }
+async function startMining(){
+ try{
+  let tx=await contract.startMining();
+  await tx.wait();
+  document.getElementById("status").innerText="Mining started";
+ }catch(e){
+  document.getElementById("status").innerText=
+  e.toString().includes("Already")?"Already mining":"Error";
+ }
 }
 
-async function updateReward() {
-  if (!contract || !userAddress) return;
-
-  try {
-    const reward = await contract.pendingReward(userAddress);
-    document.getElementById("rewardText").innerText =
-      Number(ethers.formatUnits(reward, 18)).toFixed(6);
-  } catch (err) {
-    console.error(err);
-  }
+async function claimReward(){
+ try{
+  let tx=await contract.claimReward();
+  await tx.wait();
+  document.getElementById("status").innerText="Reward claimed";
+ }catch(e){
+  document.getElementById("status").innerText="Claim failed";
+ }
 }
 
-async function startMining() {
-  if (!contract) {
-    alert("پہلے wallet connect کریں");
-    return;
-  }
-
-  try {
-    document.getElementById("status").innerText = "Starting mining...";
-    const tx = await contract.startMining();
-    await tx.wait();
-
-    document.getElementById("stateText").innerText = "ON";
-    document.getElementById("status").innerText = "Mining started";
-    await updateReward();
-
-  } catch (err) {
-    console.error(err);
-    if (String(err).includes("Already mining")) {
-      document.getElementById("stateText").innerText = "ON";
-      document.getElementById("status").innerText = "Mining already started";
-    } else {
-      document.getElementById("status").innerText = "Start mining failed";
-    }
-  }
+async function stopMining(){
+ try{
+  let tx=await contract.stopMining();
+  await tx.wait();
+  document.getElementById("status").innerText="Mining stopped";
+ }catch(e){
+  document.getElementById("status").innerText="Stop failed";
+ }
 }
 
-async function claimReward() {
-  if (!contract) {
-    alert("پہلے wallet connect کریں");
-    return;
-  }
-
-  try {
-    document.getElementById("status").innerText = "Claiming reward...";
-    const tx = await contract.claimReward();
-    await tx.wait();
-
-    document.getElementById("status").innerText = "Reward claimed";
-    await updateReward();
-
-  } catch (err) {
-    console.error(err);
-    document.getElementById("status").innerText = "Claim failed";
-  }
-}
-
-async function stopMining() {
-  if (!contract) {
-    alert("پہلے wallet connect کریں");
-    return;
-  }
-
-  try {
-    document.getElementById("status").innerText = "Stopping mining...";
-    const tx = await contract.stopMining();
-    await tx.wait();
-
-    document.getElementById("stateText").innerText = "OFF";
-    document.getElementById("status").innerText = "Mining stopped";
-    await updateReward();
-
-  } catch (err) {
-    console.error(err);
-    document.getElementById("status").innerText = "Stop failed";
-  }
-}
 </script>
 
 </body>
