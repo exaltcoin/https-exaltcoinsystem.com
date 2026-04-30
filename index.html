@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exalt Coin System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <h1>Exalt Coin System</h1>
+    <p class="sub">Web3 + Mobile Mining Dashboard</p>
+
+    <section class="card">
+      <h2>Wallet</h2>
+      <p id="walletText">Not connected</p>
+      <button onclick="connectWallet()">Connect Wallet</button>
+    </section>
+
+    <section class="card">
+      <h2>Mining</h2>
+      <div class="circle">
+        <span id="miningStatus">OFF</span>
+      </div>
+
+      <p>Balance</p>
+      <h3><span id="balance">0.000000</span> EXALT</h3>
+
+      <button onclick="startMining()">Start Mining</button>
+      <button onclick="claimReward()">Claim Reward</button>
+      <button onclick="stopMining()" class="dark">Stop Mining</button>
+    </section>
+
+    <section class="card info">
+      <h2>Mobile Ready</h2>
+      <p>Mobile par bhi mining reward server se calculate hoga.</p>
+      <p>MetaMask mobile ya Trust Wallet DApp Browser use karein.</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
