@@ -1,0 +1,97 @@
+let walletAddress = localStorage.getItem("walletAddress") || null;
+
+function shortWallet(addr) {
+  return addr ? addr.slice(0, 6) + "..." + addr.slice(-4) : "Not connected";
+}
+
+function updateWalletUI() {
+  document.getElementById("walletText").innerText =
+    walletAddress ? shortWallet(walletAddress) : "Not connected";
+}
+
+async function connectWallet() {
+  if (!window.ethereum) {
+    alert("No Web3 wallet detected. Install MetaMask or use Trust Wallet DApp Browser.");
+    return;
+  }
+
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts"
+    });
+
+    walletAddress = accounts[0];
+    localStorage.setItem("walletAddress", walletAddress);
+    updateWalletUI();
+    await updateStatus();
+  } catch (err) {
+    alert("Wallet connection failed");
+    console.error(err);
+  }
+}
+
+async function startMining() {
+  if (!walletAddress) {
+    alert("Connect wallet first");
+    return;
+  }
+
+  await fetch("/api/start-mining", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ wallet: walletAddress })
+  });
+
+  await updateStatus();
+}
+
+async function updateStatus() {
+  if (!walletAddress) return;
+
+  const res = await fetch("/api/status", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ wallet: walletAddress })
+  });
+
+  const data = await res.json();
+
+  document.getElementById("balance").innerText = data.balance;
+  document.getElementById("miningStatus").innerText = data.mining ? "ACTIVE" : "OFF";
+}
+
+async function claimReward() {
+  if (!walletAddress) {
+    alert("Connect wallet first");
+    return;
+  }
+
+  const res = await fetch("/api/claim", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ wallet: walletAddress })
+  });
+
+  const data = await res.json();
+  alert("Claimed: " + data.claimed + " EXALT");
+  await updateStatus();
+}
+
+async function stopMining() {
+  if (!walletAddress) {
+    alert("Connect wallet first");
+    return;
+  }
+
+  await fetch("/api/stop-mining", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ wallet: walletAddress })
+  });
+
+  await updateStatus();
+}
+
+updateWalletUI();
+updateStatus();
+setInterval(updateStatus, 3000);
