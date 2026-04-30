@@ -1,0 +1,89 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: white;
+}
+
+.app {
+  max-width: 480px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  color: #ffb300;
+  margin-bottom: 5px;
+}
+
+.sub {
+  color: #aaa;
+}
+
+.card {
+  background: #1d1d1d;
+  border: 1px solid #333;
+  border-radius: 18px;
+  padding: 20px;
+  margin-top: 18px;
+  box-shadow: 0 0 20px rgba(255, 179, 0, 0.08);
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 12px;
+  background: #ffb300;
+  color: #111;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+button.dark {
+  background: #333;
+  color: white;
+}
+
+.circle {
+  width: 180px;
+  height: 180px;
+  border: 12px solid #ffb300;
+  border-radius: 50%;
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 1.5s infinite;
+}
+
+.circle span {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+h3 {
+  color: #ffb300;
+  font-size: 28px;
+}
+
+.info {
+  color: #ccc;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 rgba(255, 179, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 179, 0, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(255, 179, 0, 0.3);
+  }
+}
