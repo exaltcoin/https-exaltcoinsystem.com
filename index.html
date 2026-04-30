@@ -119,23 +119,42 @@
   let userAddress;
   let refreshTimer;
 
-  async function connectWallet() {
-    try {
-      if (!window.ethereum) {
-        alert("MetaMask install کریں یا Trust Wallet DApp Browser میں website کھولیں");
-        return;
-      }
+async function connectWallet() {
+  try {
+    if (!window.ethereum) {
+      alert("MetaMask install کریں ❌");
+      return;
+    }
 
-      provider = new ethers.providers.Web3Provider(window.ethereum);
+    provider = new ethers.providers.Web3Provider(window.ethereum);
 
-      const network = await provider.getNetwork();
+    await provider.send("eth_requestAccounts", []);
 
-      if (network.chainId !== 11155111) {
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0xaa36a7" }]
-        });
-      }
+    // Sepolia force
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: "0xaa36a7" }]
+    });
+
+    signer = provider.getSigner();
+    userAddress = await signer.getAddress();
+
+    contract = new ethers.Contract(contractAddress, abi, signer);
+
+    document.getElementById("walletAddress").innerText = userAddress;
+
+    showMessage("Wallet connected successfully ✅");
+
+    await updateDashboard();
+
+  } catch (error) {
+    console.error(error);
+
+    alert(error.message); // 👈 یہ اصل error دکھائے گا
+
+    showMessage("Wallet connect failed ❌");
+  }
+}
 
       await provider.send("eth_requestAccounts", []);
       signer = provider.getSigner();
