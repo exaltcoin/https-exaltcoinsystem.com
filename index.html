@@ -3,41 +3,251 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exalt Coin System</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Exalt Coin Mining</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 430px;
+      margin: 40px auto;
+      padding: 25px;
+      background: #1c1c1c;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(255, 165, 0, 0.4);
+    }
+
+    h1 {
+      color: orange;
+    }
+
+    .wallet {
+      font-size: 13px;
+      color: #bbb;
+      word-break: break-all;
+      margin-bottom: 20px;
+    }
+
+    .status {
+      width: 150px;
+      height: 150px;
+      border: 8px solid orange;
+      border-radius: 50%;
+      margin: 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    .balance {
+      font-size: 24px;
+      color: orange;
+      margin: 20px 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 12px;
+      background: orange;
+      color: #111;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    .stop {
+      background: #444;
+      color: white;
+    }
+
+    .msg {
+      margin-top: 15px;
+      color: #ccc;
+      font-size: 14px;
+    }
+  </style>
 </head>
+
 <body>
-  <main class="app">
-    <h1>Exalt Coin System</h1>
-    <p class="sub">Web3 + Mobile Mining Dashboard</p>
 
-    <section class="card">
-      <h2>Wallet</h2>
-      <p id="walletText">Not connected</p>
-      <button onclick="connectWallet()">Connect Wallet</button>
-    </section>
+  <div class="container">
+    <h1>Exalt Coin Mining</h1>
 
-    <section class="card">
-      <h2>Mining</h2>
-      <div class="circle">
-        <span id="miningStatus">OFF</span>
-      </div>
+    <div class="wallet" id="walletAddress">Wallet not connected</div>
 
-      <p>Balance</p>
-      <h3><span id="balance">0.000000</span> EXALT</h3>
+    <div class="status" id="miningStatus">OFF</div>
 
-      <button onclick="startMining()">Start Mining</button>
-      <button onclick="claimReward()">Claim Reward</button>
-      <button onclick="stopMining()" class="dark">Stop Mining</button>
-    </section>
+    <div class="balance" id="rewardBalance">0.000000 EXALT</div>
 
-    <section class="card info">
-      <h2>Mobile Ready</h2>
-      <p>Mobile par bhi mining reward server se calculate hoga.</p>
-      <p>MetaMask mobile ya Trust Wallet DApp Browser use karein.</p>
-    </section>
-  </main>
+    <button onclick="connectWallet()">Connect Wallet</button>
+    <button onclick="startMining()">Start Mining</button>
+    <button onclick="claimReward()">Claim Reward</button>
+    <button class="stop" onclick="stopMining()">Stop Mining</button>
 
-  <script src="script.js"></script>
+    <div class="msg" id="message">Please connect your wallet</div>
+  </div>
+
+<script>
+  const contractAddress = "0x9986cfa63d748518094b339B0F9E145ee8e5f82A";
+
+  const abi = [
+    "function startMining() external",
+    "function stopMining() external",
+    "function claimReward() external",
+    "function getUserInfo(address user) external view returns (bool,uint256,uint256,uint256)"
+  ];
+
+  let provider;
+  let signer;
+  let contract;
+  let userAddress;
+  let refreshTimer;
+
+  async function connectWallet() {
+    try {
+      if (!window.ethereum) {
+        alert("MetaMask install کریں یا Trust Wallet DApp Browser میں website کھولیں");
+        return;
+      }
+
+      provider = new ethers.providers.Web3Provider(window.ethereum);
+
+      const network = await provider.getNetwork();
+
+      if (network.chainId !== 11155111) {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0xaa36a7" }]
+        });
+      }
+
+      await provider.send("eth_requestAccounts", []);
+      signer = provider.getSigner();
+      userAddress = await signer.getAddress();
+
+      contract = new ethers.Contract(contractAddress, abi, signer);
+
+      document.getElementById("walletAddress").innerText = userAddress;
+      showMessage("Wallet connected successfully ✅");
+
+      await updateDashboard();
+
+      if (refreshTimer) clearInterval(refreshTimer);
+      refreshTimer = setInterval(updateDashboard, 3000);
+
+    } catch (error) {
+      console.error(error);
+      showMessage("Wallet connect failed ❌");
+    }
+  }
+
+  async function startMining() {
+    try {
+      if (!contract) {
+        alert("پہلے wallet connect کریں");
+        return;
+      }
+
+      showMessage("Starting mining transaction...");
+      const tx = await contract.startMining();
+      await tx.wait();
+
+      showMessage("Mining started ✅");
+      await updateDashboard();
+
+    } catch (error) {
+      console.error(error);
+      showMessage(error.reason || "Start mining failed ❌");
+    }
+  }
+
+  async function stopMining() {
+    try {
+      if (!contract) {
+        alert("پہلے wallet connect کریں");
+        return;
+      }
+
+      showMessage("Stopping mining transaction...");
+      const tx = await contract.stopMining();
+      await tx.wait();
+
+      showMessage("Mining stopped ✅");
+      await updateDashboard();
+
+    } catch (error) {
+      console.error(error);
+      showMessage(error.reason || "Stop mining failed ❌");
+    }
+  }
+
+  async function claimReward() {
+    try {
+      if (!contract) {
+        alert("پہلے wallet connect کریں");
+        return;
+      }
+
+      showMessage("Claiming reward...");
+      const tx = await contract.claimReward();
+      await tx.wait();
+
+      showMessage("Reward claimed successfully ✅");
+      await updateDashboard();
+
+    } catch (error) {
+      console.error(error);
+      showMessage(error.reason || "Claim reward failed ❌");
+    }
+  }
+
+  async function updateDashboard() {
+    if (!contract || !userAddress) return;
+
+    const data = await contract.getUserInfo(userAddress);
+
+    const mining = data[0];
+    const liveReward = data[1];
+    const pendingReward = data[2];
+    const walletBalance = data[3];
+
+    const totalReward = liveReward.add(pendingReward).add(walletBalance);
+
+    document.getElementById("miningStatus").innerText = mining ? "ON" : "OFF";
+    document.getElementById("rewardBalance").innerText =
+      Number(ethers.utils.formatEther(totalReward)).toFixed(6) + " EXALT";
+  }
+
+  function showMessage(text) {
+    document.getElementById("message").innerText = text;
+  }
+
+  if (window.ethereum) {
+    window.ethereum.on("accountsChanged", () => {
+      location.reload();
+    });
+
+    window.ethereum.on("chainChanged", () => {
+      location.reload();
+    });
+  }
+</script>
+
 </body>
 </html>
