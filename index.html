@@ -3,71 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exalt Coin Mining Rewards</title>
+  <title>Exalt Coin System</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 </head>
 <body>
-
-<main class="container">
   <header>
     <h1>Exalt Coin</h1>
-    <p>Mining • Referral • Reward System</p>
+    <p>Mine. Refer. Earn. Grow with EXALT.</p>
+    <button onclick="connectWallet()">Connect Wallet</button>
+    <p id="wallet">Wallet not connected</p>
   </header>
 
-  <section class="card">
-    <h2>Wallet Dashboard</h2>
-    <p id="walletStatus">Wallet not connected</p>
-    <p id="walletAddress">—</p>
-    <button id="connectBtn">Open Wallet / Connect Wallet</button>
-  </section>
-
-  <section class="card">
-    <h2>Mining Dashboard</h2>
-    <div class="mining-circle">
-      <span id="miningStatus">OFF</span>
+  <section class="cards">
+    <div class="card">
+      <h2>Buy EXALT</h2>
+      <p>Trade EXALT on PancakeSwap.</p>
+      <a target="_blank" id="buyLink">Open PancakeSwap</a>
     </div>
-    <h3><span id="miningBalance">0.0000</span> EXALT</h3>
-    <p>Mining Power: <span id="miningPower">1.00x</span></p>
-    <button id="startMiningBtn">Start Mining</button>
-    <button id="stopMiningBtn">Stop Mining</button>
+
+    <div class="card">
+      <h2>Live Chart</h2>
+      <p>View EXALT chart on Dexscreener.</p>
+      <a target="_blank" id="chartLink">Open Chart</a>
+    </div>
+
+    <div class="card">
+      <h2>Add Token</h2>
+      <p>Add EXALT to MetaMask / Trust Wallet.</p>
+      <button onclick="addToken()">Add EXALT</button>
+    </div>
   </section>
 
-  <section class="card">
-    <h2>Claim Reward</h2>
-    <select id="country">
-      <option value="">Select Your Country</option>
-      <option>Pakistan</option>
-      <option>India</option>
-      <option>Kuwait</option>
-      <option>UAE</option>
-      <option>Saudi Arabia</option>
-      <option>UK</option>
-      <option>USA</option>
-      <option>Other</option>
-    </select>
-    <button id="claimBtn">Claim EXALT Reward</button>
-    <p id="message">Connect wallet and start mining.</p>
+  <section class="dashboard">
+    <h2>Mining Dashboard</h2>
+    <p><b>EXALT Balance:</b> <span id="balance">0</span></p>
+
+    <button onclick="startMining()">Start Mining</button>
+    <button onclick="claimRewards()">Claim Rewards</button>
+
+    <p id="status"></p>
   </section>
 
-  <section class="card">
-    <h2>Your Referral Link</h2>
-    <input id="refLink" readonly />
-    <button id="copyBtn">Copy Referral Link</button>
+  <section class="info">
+    <h2>Tokenomics</h2>
+    <ul>
+      <li>Total Supply: 500,000,000 EXALT</li>
+      <li>Public Sale: 50%</li>
+      <li>Ecosystem: 12.5%</li>
+      <li>Mining Rewards: 10 Lakh</li>
+      <li>Referral Rewards: 10 Lakh</li>
+      <li>Liquidity: 10%</li>
+      <li>Marketing: 10%</li>
+    </ul>
   </section>
 
-  <section class="stats">
-    <div><h3 id="refCount">0</h3><p>Total Referrals</p></div>
-    <div><h3 id="refEarned">0 EXALT</h3><p>Referral Earned</p></div>
-    <div><h3 id="totalClaimed">0 EXALT</h3><p>Total Claimed</p></div>
-    <div><h3 id="poolBalance">0 EXALT</h3><p>Reward Pool</p></div>
-  </section>
+  <footer>
+    <p>Contract: <span id="tokenAddress"></span></p>
+  </footer>
 
-  <section class="card">
-    <h2>People Joined From Your Referral</h2>
-    <div id="referralList">Connect wallet to view referrals.</div>
-  </section>
-</main>
-
-<script type="module" src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
