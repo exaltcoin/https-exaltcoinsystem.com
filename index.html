@@ -8,60 +8,91 @@
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Exalt Coin</h1>
-    <p>Mine. Refer. Earn. Grow with EXALT.</p>
-    <button onclick="connectWallet()">Connect Wallet</button>
-    <p id="wallet">Wallet not connected</p>
-  </header>
 
-  <section class="cards">
-    <div class="card">
-      <h2>Buy EXALT</h2>
-      <p>Trade EXALT on PancakeSwap.</p>
-      <a target="_blank" id="buyLink">Open PancakeSwap</a>
-    </div>
+<header class="hero">
+  <div class="badge">Live on BNB Smart Chain</div>
+  <h1>Exalt Coin</h1>
+  <p>Mine • Refer • Earn • Grow with EXALT</p>
 
-    <div class="card">
-      <h2>Live Chart</h2>
-      <p>View EXALT chart on Dexscreener.</p>
-      <a target="_blank" id="chartLink">Open Chart</a>
-    </div>
+  <button onclick="connectWallet()">Connect Wallet</button>
+  <a target="_blank" href="https://pancakeswap.finance/swap?outputCurrency=0x341ba9CA7E7872F7E743F9e7eF1b48B9eE314EB8">Buy EXALT</a>
+  <a target="_blank" href="https://dexscreener.com/bsc/0x341ba9CA7E7872F7E743F9e7eF1b48B9eE314EB8">Live Chart</a>
 
-    <div class="card">
-      <h2>Add Token</h2>
-      <p>Add EXALT to MetaMask / Trust Wallet.</p>
-      <button onclick="addToken()">Add EXALT</button>
-    </div>
-  </section>
+  <p id="wallet">Wallet not connected</p>
+</header>
 
-  <section class="dashboard">
-    <h2>Mining Dashboard</h2>
-    <p><b>EXALT Balance:</b> <span id="balance">0</span></p>
+<section class="dashboard">
+  <h2>User Profile</h2>
 
-    <button onclick="startMining()">Start Mining</button>
-    <button onclick="claimRewards()">Claim Rewards</button>
+  <p><b>User ID:</b> <span id="userId">---</span></p>
+  <p><b>Wallet:</b> <span id="userWallet">---</span></p>
+  <p><b>Referrer:</b> <span id="referrer">No referrer</span></p>
+  <p><b>EXALT Balance:</b> <span id="balance">0</span></p>
 
-    <p id="status"></p>
-  </section>
+  <label>Select Country</label>
+  <select id="country"></select>
 
-  <section class="info">
-    <h2>Tokenomics</h2>
-    <ul>
-      <li>Total Supply: 500,000,000 EXALT</li>
-      <li>Public Sale: 50%</li>
-      <li>Ecosystem: 12.5%</li>
-      <li>Mining Rewards: 10 Lakh</li>
-      <li>Referral Rewards: 10 Lakh</li>
-      <li>Liquidity: 10%</li>
-      <li>Marketing: 10%</li>
-    </ul>
-  </section>
+  <button onclick="saveProfile()">Save Profile</button>
+</section>
 
-  <footer>
-    <p>Contract: <span id="tokenAddress"></span></p>
-  </footer>
+<section class="dashboard">
+  <h2>Referral System</h2>
 
-  <script src="app.js"></script>
+  <p>Your referral link:</p>
+  <input id="refLink" readonly />
+  <button onclick="copyReferral()">Copy Referral Link</button>
+
+  <p>Share this link with users. When they open it and connect wallet, your wallet becomes their referrer.</p>
+</section>
+
+<section class="dashboard">
+  <h2>Mining Dashboard</h2>
+
+  <button onclick="startMining()">Start Mining</button>
+  <button onclick="claimRewards()">Claim Rewards</button>
+  <button onclick="addToken()">Add EXALT to Wallet</button>
+
+  <p id="status"></p>
+</section>
+
+<section class="cards">
+  <div class="card">
+    <h2>Telegram</h2>
+    <a target="_blank" href="https://t.me/exaltcommunity">Join Telegram</a>
+  </div>
+
+  <div class="card">
+    <h2>X / Twitter</h2>
+    <a target="_blank" href="https://x.com/exalt_coin?s=21">Follow on X</a>
+  </div>
+
+  <div class="card">
+    <h2>Discord</h2>
+    <a target="_blank" href="https://discord.gg/MzB7Rf26f">Join Discord</a>
+  </div>
+</section>
+
+<section class="dashboard">
+  <h2>Local Mining Users</h2>
+  <p>This list is saved on this device only.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Wallet</th>
+        <th>Country</th>
+        <th>Referrer</th>
+      </tr>
+    </thead>
+    <tbody id="usersTable"></tbody>
+  </table>
+</section>
+
+<footer>
+  <p>EXALT Contract:</p>
+  <span>0x341ba9CA7E7872F7E743F9e7eF1b48B9eE314EB8</span>
+</footer>
+
+<script src="app.js"></script>
 </body>
 </html>
