@@ -7,59 +7,75 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="container">
-    <header>
-      <h1>Exalt Coin</h1>
-      <p>Mining • Referral • Reward System</p>
-    </header>
 
-    <section class="card">
-      <h2>Wallet Dashboard</h2>
-      <p id="walletStatus">Wallet not connected</p>
-      <p id="walletAddress">—</p>
+<main class="container">
+  <header>
+    <h1>Exalt Coin</h1>
+    <p>Mining • Referral • Reward System</p>
+  </header>
 
-      <button id="connectBrowserBtn">Connect MetaMask / Trust Browser</button>
-      <button id="connectWcBtn">Connect Trust Wallet / WalletConnect QR</button>
-      <button id="disconnectBtn">Disconnect Wallet</button>
-    </section>
+  <section class="card">
+    <h2>Wallet Dashboard</h2>
+    <p id="walletStatus">Wallet not connected</p>
+    <p id="walletAddress">—</p>
 
-    <section class="card">
-      <h2>Claim Reward</h2>
-      <select id="country">
-        <option value="">Select Your Country</option>
-        <option>Pakistan</option>
-        <option>India</option>
-        <option>Kuwait</option>
-        <option>UAE</option>
-        <option>Saudi Arabia</option>
-        <option>UK</option>
-        <option>USA</option>
-        <option>Other</option>
-      </select>
+    <button id="connectBrowserBtn">Connect Browser Wallet</button>
+    <button id="openTrustBtn">Open in Trust Wallet</button>
+    <button id="openMetaMaskBtn">Open in MetaMask</button>
+    <button id="connectWcBtn">WalletConnect QR</button>
+    <button id="disconnectBtn">Disconnect</button>
+  </section>
 
-      <button id="claimBtn">Claim EXALT Reward</button>
-      <p id="message">Connect wallet to start.</p>
-    </section>
+  <section class="card">
+    <h2>Claim Reward</h2>
 
-    <section class="card">
-      <h2>Your Referral Link</h2>
-      <input id="refLink" readonly />
-      <button id="copyBtn">Copy Referral Link</button>
-    </section>
+    <select id="country">
+      <option value="">Select Your Country</option>
+      <option>Pakistan</option>
+      <option>India</option>
+      <option>Kuwait</option>
+      <option>UAE</option>
+      <option>Saudi Arabia</option>
+      <option>UK</option>
+      <option>USA</option>
+      <option>Other</option>
+    </select>
 
-    <section class="stats">
-      <div><h3 id="refCount">0</h3><p>Total Referrals</p></div>
-      <div><h3 id="refEarned">0 EXALT</h3><p>Referral Earned</p></div>
-      <div><h3 id="totalClaimed">0 EXALT</h3><p>Total Claimed</p></div>
-      <div><h3 id="poolBalance">0 EXALT</h3><p>Reward Pool</p></div>
-    </section>
+    <button id="claimBtn">Claim EXALT Reward</button>
+    <p id="message">Connect wallet to start.</p>
+  </section>
 
-    <section class="card">
-      <h2>People Joined From Your Referral</h2>
-      <div id="referralList">Connect wallet to view referrals.</div>
-    </section>
-  </main>
+  <section class="card">
+    <h2>Your Referral Link</h2>
+    <input id="refLink" readonly />
+    <button id="copyBtn">Copy Referral Link</button>
+  </section>
 
-  <script type="module" src="app.js"></script>
+  <section class="stats">
+    <div>
+      <h3 id="refCount">0</h3>
+      <p>Total Referrals</p>
+    </div>
+    <div>
+      <h3 id="refEarned">0 EXALT</h3>
+      <p>Referral Earned</p>
+    </div>
+    <div>
+      <h3 id="totalClaimed">0 EXALT</h3>
+      <p>Total Claimed</p>
+    </div>
+    <div>
+      <h3 id="poolBalance">0 EXALT</h3>
+      <p>Reward Pool</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>People Joined From Your Referral</h2>
+    <div id="referralList">Connect wallet to view referrals.</div>
+  </section>
+</main>
+
+<script type="module" src="app.js"></script>
 </body>
 </html>
