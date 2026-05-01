@@ -1,4 +1,6 @@
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -24,7 +26,10 @@ h1 {
   margin: 0;
 }
 
-header p { color: #d1d5db; }
+header p {
+  color: #d1d5db;
+  font-size: 18px;
+}
 
 .card {
   background: rgba(17, 24, 39, 0.92);
@@ -35,7 +40,9 @@ header p { color: #d1d5db; }
   box-shadow: 0 0 30px rgba(245, 158, 11, 0.15);
 }
 
-h2 { color: #facc15; }
+h2 {
+  color: #facc15;
+}
 
 button {
   width: 100%;
@@ -50,7 +57,12 @@ button {
   cursor: pointer;
 }
 
-input, select {
+button:hover {
+  opacity: 0.9;
+}
+
+input,
+select {
   width: 100%;
   padding: 15px;
   border-radius: 12px;
@@ -60,7 +72,8 @@ input, select {
   margin-top: 10px;
 }
 
-#walletAddress, #refLink {
+#walletAddress,
+#refLink {
   word-break: break-all;
   color: #86efac;
 }
@@ -95,6 +108,11 @@ input, select {
 }
 
 @media (max-width: 750px) {
-  h1 { font-size: 40px; }
-  .stats { grid-template-columns: 1fr; }
+  h1 {
+    font-size: 40px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
 }
