@@ -15,7 +15,6 @@ const ABI = [
 
 const ZERO = "0x0000000000000000000000000000000000000000";
 
-let rawProvider;
 let provider;
 let signer;
 let wallet;
@@ -27,15 +26,18 @@ const walletAddress = document.getElementById("walletAddress");
 const refLink = document.getElementById("refLink");
 const message = document.getElementById("message");
 
-async function setupProvider(selectedProvider) {
-  rawProvider = selectedProvider;
+function shortAddr(address) {
+  return address.slice(0, 6) + "..." + address.slice(-4);
+}
+
+async function setupWallet(rawProvider) {
   provider = new ethers.BrowserProvider(rawProvider);
   signer = await provider.getSigner();
   wallet = await signer.getAddress();
   contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
   walletStatus.innerText = "Wallet Connected ✅";
-  walletAddress.innerText = wallet;
+  walletAddress.innerText = shortAddr(wallet);
   refLink.value = window.location.origin + window.location.pathname + "?ref=" + wallet;
   message.innerText = "Wallet connected successfully.";
 
@@ -43,8 +45,11 @@ async function setupProvider(selectedProvider) {
   await loadMyReferrals();
 }
 
-async function switchToBSCInjected() {
+async function switchToBSC() {
+  if (!window.ethereum) return;
+
   const chainId = await window.ethereum.request({ method: "eth_chainId" });
+
   if (chainId === "0x38") return;
 
   try {
@@ -58,7 +63,11 @@ async function switchToBSCInjected() {
       params: [{
         chainId: "0x38",
         chainName: "BNB Smart Chain",
-        nativeCurrency: { name: "BNB", symbol: "BNB", decimals: 18 },
+        nativeCurrency: {
+          name: "BNB",
+          symbol: "BNB",
+          decimals: 18
+        },
         rpcUrls: ["https://bsc-dataseed.binance.org/"],
         blockExplorerUrls: ["https://bscscan.com"]
       }]
@@ -68,31 +77,52 @@ async function switchToBSCInjected() {
 
 async function connectBrowserWallet() {
   if (!window.ethereum) {
-    alert("No browser wallet found. Use WalletConnect QR button.");
+    alert("No browser wallet found. Use Trust Wallet, MetaMask, or WalletConnect QR.");
     return;
   }
 
-  await switchToBSCInjected();
-  await window.ethereum.request({ method: "eth_requestAccounts" });
-  await setupProvider(window.ethereum);
+  await switchToBSC();
+
+  await window.ethereum.request({
+    method: "eth_requestAccounts"
+  });
+
+  await setupWallet(window.ethereum);
+}
+
+function openTrustWallet() {
+  const url = "https://exaltcoinsystem.com";
+  window.location.href =
+    "https://link.trustwallet.com/open_url?url=" + encodeURIComponent(url);
+}
+
+function openMetaMask() {
+  const url = "exaltcoinsystem.com";
+  window.location.href =
+    "https://metamask.app.link/dapp/" + url;
 }
 
 async function connectWalletConnect() {
-  wcProvider = await EthereumProvider.init({
-    projectId: PROJECT_ID,
-    chains: [56],
-    optionalChains: [56],
-    showQrModal: true,
-    metadata: {
-      name: "Exalt Coin",
-      description: "Exalt Coin Mining Referral Reward System",
-      url: "https://exaltcoinsystem.com",
-      icons: ["https://exaltcoinsystem.com/favicon.png"]
-    }
-  });
+  try {
+    wcProvider = await EthereumProvider.init({
+      projectId: PROJECT_ID,
+      chains: [56],
+      optionalChains: [56],
+      showQrModal: true,
+      metadata: {
+        name: "Exalt Coin",
+        description: "Exalt Coin Mining Referral Reward System",
+        url: "https://exaltcoinsystem.com",
+        icons: ["https://exaltcoinsystem.com/favicon.png"]
+      }
+    });
 
-  await wcProvider.connect();
-  await setupProvider(wcProvider);
+    await wcProvider.connect();
+    await setupWallet(wcProvider);
+  } catch (err) {
+    console.error(err);
+    alert("WalletConnect failed. Check WalletConnect Cloud domains.");
+  }
 }
 
 async function claimReward() {
@@ -102,6 +132,7 @@ async function claimReward() {
   }
 
   const country = document.getElementById("country").value;
+
   if (!country) {
     alert("Please select your country.");
     return;
@@ -116,6 +147,7 @@ async function claimReward() {
 
   try {
     message.innerText = "Sending claim transaction...";
+
     const tx = await contract.claim(referrer, country);
 
     alert("Transaction sent. Please wait.");
@@ -136,15 +168,19 @@ async function claimReward() {
 async function loadStats() {
   if (!contract || !wallet) return;
 
-  const count = await contract.referralCount(wallet);
-  const earned = await contract.totalReferralEarned(wallet);
-  const claimed = await contract.totalClaimed(wallet);
-  const pool = await contract.getContractBalance();
+  try {
+    const count = await contract.referralCount(wallet);
+    const earned = await contract.totalReferralEarned(wallet);
+    const claimed = await contract.totalClaimed(wallet);
+    const pool = await contract.getContractBalance();
 
-  document.getElementById("refCount").innerText = count.toString();
-  document.getElementById("refEarned").innerText = ethers.formatEther(earned) + " EXALT";
-  document.getElementById("totalClaimed").innerText = ethers.formatEther(claimed) + " EXALT";
-  document.getElementById("poolBalance").innerText = ethers.formatEther(pool) + " EXALT";
+    document.getElementById("refCount").innerText = count.toString();
+    document.getElementById("refEarned").innerText = ethers.formatEther(earned) + " EXALT";
+    document.getElementById("totalClaimed").innerText = ethers.formatEther(claimed) + " EXALT";
+    document.getElementById("poolBalance").innerText = ethers.formatEther(pool) + " EXALT";
+  } catch (err) {
+    console.error("Stats error:", err);
+  }
 }
 
 async function loadMyReferrals() {
@@ -167,6 +203,7 @@ async function loadMyReferrals() {
     }
 
     list.innerHTML = "";
+
     events.reverse().forEach((event) => {
       const joinedWallet = event.args.user;
       const country = event.args.country;
@@ -177,10 +214,11 @@ async function loadMyReferrals() {
         <b>Joined Wallet:</b><br>${joinedWallet}<br><br>
         <b>Country:</b> ${country}
       `;
+
       list.appendChild(div);
     });
   } catch (err) {
-    console.error(err);
+    console.error("Referral load error:", err);
     list.innerHTML = "Could not load referrals.";
   }
 }
@@ -190,6 +228,7 @@ function copyReferral() {
     alert("Connect wallet first.");
     return;
   }
+
   navigator.clipboard.writeText(refLink.value);
   alert("Referral link copied.");
 }
@@ -199,7 +238,6 @@ async function disconnectWallet() {
     if (wcProvider) await wcProvider.disconnect();
   } catch {}
 
-  rawProvider = null;
   provider = null;
   signer = null;
   wallet = null;
@@ -213,6 +251,8 @@ async function disconnectWallet() {
 }
 
 document.getElementById("connectBrowserBtn").onclick = connectBrowserWallet;
+document.getElementById("openTrustBtn").onclick = openTrustWallet;
+document.getElementById("openMetaMaskBtn").onclick = openMetaMask;
 document.getElementById("connectWcBtn").onclick = connectWalletConnect;
 document.getElementById("claimBtn").onclick = claimReward;
 document.getElementById("copyBtn").onclick = copyReferral;
