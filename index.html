@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exalt Coin Referral Rewards</title>
+  <title>Exalt Coin Mining Rewards</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -22,8 +22,18 @@
   </section>
 
   <section class="card">
-    <h2>Claim Reward</h2>
+    <h2>Mining Dashboard</h2>
+    <div class="mining-circle">
+      <span id="miningStatus">OFF</span>
+    </div>
+    <h3><span id="miningBalance">0.0000</span> EXALT</h3>
+    <p>Mining Power: <span id="miningPower">1.00x</span></p>
+    <button id="startMiningBtn">Start Mining</button>
+    <button id="stopMiningBtn">Stop Mining</button>
+  </section>
 
+  <section class="card">
+    <h2>Claim Reward</h2>
     <select id="country">
       <option value="">Select Your Country</option>
       <option>Pakistan</option>
@@ -35,9 +45,8 @@
       <option>USA</option>
       <option>Other</option>
     </select>
-
     <button id="claimBtn">Claim EXALT Reward</button>
-    <p id="message">Connect wallet to start.</p>
+    <p id="message">Connect wallet and start mining.</p>
   </section>
 
   <section class="card">
