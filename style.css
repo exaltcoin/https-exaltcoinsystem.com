@@ -1,6 +1,4 @@
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -26,12 +24,9 @@ h1 {
   margin: 0;
 }
 
-header p {
-  color: #d1d5db;
-  font-size: 18px;
-}
+header p { color: #d1d5db; }
 
-.card, .whitepaper {
+.card {
   background: rgba(17, 24, 39, 0.92);
   border: 1px solid rgba(245, 158, 11, 0.35);
   border-radius: 22px;
@@ -40,9 +35,7 @@ header p {
   box-shadow: 0 0 30px rgba(245, 158, 11, 0.15);
 }
 
-h2 {
-  color: #facc15;
-}
+h2 { color: #facc15; }
 
 button {
   width: 100%;
@@ -101,17 +94,7 @@ input, select {
   word-break: break-all;
 }
 
-.whitepaper {
-  line-height: 1.7;
-  color: #d1d5db;
-}
-
 @media (max-width: 750px) {
-  h1 {
-    font-size: 40px;
-  }
-
-  .stats {
-    grid-template-columns: 1fr;
-  }
+  h1 { font-size: 40px; }
+  .stats { grid-template-columns: 1fr; }
 }
