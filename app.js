@@ -1,27 +1,25 @@
-const MINING_REWARD_CONTRACT = "0x08002d47650086196Eb966b33028b951fff20ADB";
+const CONTRACT_ADDRESS = "0xB6cDe2B7E249B83a369e07c58a3084A7861C7897";
 
-const MINING_REWARD_ABI = [
-  "function claim() public",
-  "function claimReward() public"
+const ABI = [
+  "function claim(address referrer, string country) public",
+  "function referralCount(address user) public view returns (uint256)",
+  "function totalReferralEarned(address user) public view returns (uint256)",
+  "function totalClaimed(address user) public view returns (uint256)",
+  "function getContractBalance() public view returns (uint256)",
+  "event UserJoined(address indexed user, address indexed referrer, string country)"
 ];
 
-let connectedWallet = null;
-let balance = Number(localStorage.getItem("exalt_balance")) || 0;
+const ZERO = "0x0000000000000000000000000000000000000000";
 
-const balanceEl = document.getElementById("balance");
-const walletStatusEl = document.getElementById("walletStatus");
-const walletAddressEl = document.getElementById("walletAddress");
-const miningStatusEl = document.getElementById("miningStatus");
-const messageEl = document.getElementById("message");
+let provider;
+let signer;
+let wallet;
+let contract;
 
-function updateBalance() {
-  balanceEl.textContent = balance.toFixed(6);
-  localStorage.setItem("exalt_balance", balance.toString());
-}
-
-function shortAddress(address) {
-  return address.slice(0, 6) + "..." + address.slice(-4);
-}
+const walletStatus = document.getElementById("walletStatus");
+const walletAddress = document.getElementById("walletAddress");
+const refLink = document.getElementById("refLink");
+const message = document.getElementById("message");
 
 async function switchToBSC() {
   const chainId = await window.ethereum.request({ method: "eth_chainId" });
@@ -33,7 +31,7 @@ async function switchToBSC() {
       method: "wallet_switchEthereumChain",
       params: [{ chainId: "0x38" }]
     });
-  } catch (error) {
+  } catch {
     await window.ethereum.request({
       method: "wallet_addEthereumChain",
       params: [{
@@ -51,82 +49,146 @@ async function switchToBSC() {
   }
 }
 
-document.getElementById("connectWalletBtn").addEventListener("click", async () => {
-  if (!window.ethereum) {
-    messageEl.textContent = "Open this website inside Trust Wallet or MetaMask browser.";
-    alert("Open this website inside Trust Wallet or MetaMask browser.");
-    return;
-  }
-
-  try {
-    await switchToBSC();
-
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts"
-    });
-
-    connectedWallet = accounts[0];
-
-    walletStatusEl.textContent = "Wallet connected";
-    walletAddressEl.textContent = shortAddress(connectedWallet);
-    miningStatusEl.textContent = "ON";
-    messageEl.textContent = "Wallet connected successfully on BNB Smart Chain.";
-
-    balance += 0.001;
-    updateBalance();
-  } catch (error) {
-    console.error(error);
-    messageEl.textContent = "Wallet connection failed.";
-    alert("Wallet connection failed or cancelled.");
-  }
-});
-
-document.getElementById("claimRewardBtn").addEventListener("click", async () => {
+async function connectWallet() {
   if (!window.ethereum) {
     alert("Open this website inside Trust Wallet or MetaMask browser.");
     return;
   }
 
+  await switchToBSC();
+
+  provider = new ethers.BrowserProvider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
+
+  signer = await provider.getSigner();
+  wallet = await signer.getAddress();
+
+  contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+
+  walletStatus.innerText = "Wallet Connected ✅";
+  walletAddress.innerText = wallet;
+
+  refLink.value = window.location.origin + window.location.pathname + "?ref=" + wallet;
+
+  message.innerText = "Wallet connected successfully.";
+
+  await loadStats();
+  await loadMyReferrals();
+}
+
+async function claimReward() {
+  if (!wallet) {
+    alert("Connect wallet first.");
+    return;
+  }
+
+  const country = document.getElementById("country").value;
+
+  if (!country) {
+    alert("Please select your country.");
+    return;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  let referrer = params.get("ref") || ZERO;
+
+  if (referrer.toLowerCase() === wallet.toLowerCase()) {
+    referrer = ZERO;
+  }
+
   try {
-    await switchToBSC();
+    message.innerText = "Sending claim transaction...";
 
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
+    const tx = await contract.claim(referrer, country);
 
-    const network = await provider.getNetwork();
+    alert("Transaction sent. Please wait.");
+    await tx.wait();
 
-    if (network.chainId !== 56n) {
-      alert("Please switch to BNB Smart Chain.");
+    message.innerText = "Reward claimed successfully ✅";
+    alert("EXALT reward claimed successfully!");
+
+    await loadStats();
+    await loadMyReferrals();
+  } catch (err) {
+    console.error(err);
+    message.innerText = "Claim failed. Check cooldown, BNB gas, or contract balance.";
+    alert("Claim failed. Check cooldown, BNB gas, or contract balance.");
+  }
+}
+
+async function loadStats() {
+  if (!contract || !wallet) return;
+
+  try {
+    const count = await contract.referralCount(wallet);
+    const earned = await contract.totalReferralEarned(wallet);
+    const claimed = await contract.totalClaimed(wallet);
+    const pool = await contract.getContractBalance();
+
+    document.getElementById("refCount").innerText = count.toString();
+    document.getElementById("refEarned").innerText = ethers.formatEther(earned) + " EXALT";
+    document.getElementById("totalClaimed").innerText = ethers.formatEther(claimed) + " EXALT";
+    document.getElementById("poolBalance").innerText = ethers.formatEther(pool) + " EXALT";
+  } catch (err) {
+    console.error("Stats error:", err);
+  }
+}
+
+async function loadMyReferrals() {
+  const list = document.getElementById("referralList");
+
+  if (!contract || !wallet) {
+    list.innerHTML = "Connect wallet to view referrals.";
+    return;
+  }
+
+  list.innerHTML = "Loading referrals...";
+
+  try {
+    const filter = contract.filters.UserJoined(null, wallet);
+    const events = await contract.queryFilter(filter, 0, "latest");
+
+    if (events.length === 0) {
+      list.innerHTML = "No referrals yet.";
       return;
     }
 
-    const contract = new ethers.Contract(
-      MINING_REWARD_CONTRACT,
-      MINING_REWARD_ABI,
-      signer
-    );
+    list.innerHTML = "";
 
-    let tx;
+    events.reverse().forEach((event) => {
+      const joinedWallet = event.args.user;
+      const country = event.args.country;
 
-    try {
-      tx = await contract.claim();
-    } catch (error) {
-      tx = await contract.claimReward();
-    }
+      const div = document.createElement("div");
+      div.className = "ref-card";
+      div.innerHTML = `
+        <b>Joined Wallet:</b><br>${joinedWallet}<br><br>
+        <b>Country:</b> ${country}
+      `;
 
-    messageEl.textContent = "Claim transaction sent. Waiting for confirmation...";
-    await tx.wait();
-
-    balance = 0;
-    updateBalance();
-
-    messageEl.textContent = "Reward claimed successfully.";
-    alert("Reward claimed successfully.");
-  } catch (error) {
-    console.error(error);
-    messageEl.textContent = "Claim failed. Check gas fee, contract, or reward availability.";
-    alert("Claim failed. Check BNB gas fee or contract reward balance.");
+      list.appendChild(div);
+    });
+  } catch (err) {
+    console.error("Referral load error:", err);
+    list.innerHTML = "Could not load referrals.";
   }
-});
+}
 
-updateBalance();
+function copyReferral() {
+  if (!refLink.value) {
+    alert("Connect wallet first.");
+    return;
+  }
+
+  navigator.clipboard.writeText(refLink.value);
+  alert("Referral link copied.");
+}
+
+document.getElementById("connectBtn").onclick = connectWallet;
+document.getElementById("claimBtn").onclick = claimReward;
+document.getElementById("copyBtn").onclick = copyReferral;
+
+if (window.ethereum) {
+  window.ethereum.on("accountsChanged", () => location.reload());
+  window.ethereum.on("chainChanged", () => location.reload());
+}
