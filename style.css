@@ -5,169 +5,113 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #3b2600, #050505 45%, #000);
   color: white;
-  background:
-    radial-gradient(circle at top, rgba(255, 166, 0, 0.25), transparent 35%),
-    linear-gradient(135deg, #050505, #111827, #000);
 }
 
-.app {
-  width: 100%;
-  min-height: 100vh;
-  padding: 25px;
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 24px;
 }
 
-.hero {
-  max-width: 850px;
-  margin: 0 auto;
+header {
   text-align: center;
-  padding: 40px 22px;
-  background: rgba(10, 10, 10, 0.88);
-  border: 1px solid rgba(255, 166, 0, 0.35);
-  border-radius: 28px;
-  box-shadow: 0 0 45px rgba(255, 166, 0, 0.22);
-}
-
-.badge {
-  width: 72px;
-  height: 72px;
-  margin: 0 auto 15px;
-  display: grid;
-  place-items: center;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #ff9800, #ffd36b);
-  color: #111;
-  font-weight: 900;
+  padding: 30px 10px;
 }
 
 h1 {
   font-size: 52px;
-  margin: 10px 0 0;
-  color: #ffa500;
+  color: #f59e0b;
+  margin: 0;
+}
+
+header p {
+  color: #d1d5db;
+  font-size: 18px;
+}
+
+.card, .whitepaper {
+  background: rgba(17, 24, 39, 0.92);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 22px;
+  padding: 24px;
+  margin-bottom: 22px;
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.15);
 }
 
 h2 {
-  margin: 8px 0 18px;
-}
-
-.subtitle {
-  max-width: 650px;
-  margin: 0 auto 25px;
-  color: #d1d5db;
-  line-height: 1.6;
-}
-
-.wallet-box {
-  margin: 20px auto;
-  padding: 14px;
-  max-width: 520px;
-  border-radius: 18px;
-  background: #111;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-#walletAddress {
-  word-break: break-all;
   color: #facc15;
-}
-
-.circle {
-  width: 220px;
-  height: 220px;
-  margin: 25px auto;
-  border: 10px solid #ffa500;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 54px;
-  font-weight: 900;
-}
-
-h3 {
-  font-size: 32px;
-  letter-spacing: 1px;
 }
 
 button {
   width: 100%;
-  max-width: 520px;
-  display: block;
-  margin: 16px auto;
-  padding: 18px;
+  padding: 16px;
+  margin-top: 12px;
   border: none;
-  border-radius: 18px;
-  background: linear-gradient(90deg, #ff9800, #ffd36b);
+  border-radius: 14px;
+  background: linear-gradient(90deg, #f59e0b, #facc15);
   color: #111;
-  font-size: 18px;
-  font-weight: 900;
+  font-weight: bold;
+  font-size: 16px;
   cursor: pointer;
 }
 
-button:hover {
-  opacity: 0.9;
+input, select {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: white;
+  margin-top: 10px;
 }
 
-.message {
-  color: #d1d5db;
-  margin-top: 20px;
+#walletAddress, #refLink {
+  word-break: break-all;
+  color: #86efac;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.stats div {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 18px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stats h3 {
+  color: #facc15;
+  margin: 0;
+}
+
+.ref-card {
+  background: #020617;
+  border: 1px solid #374151;
+  border-radius: 14px;
+  padding: 15px;
+  margin: 10px 0;
+  word-break: break-all;
 }
 
 .whitepaper {
-  max-width: 1000px;
-  margin: 35px auto;
-  padding: 30px;
-  background: rgba(17, 24, 39, 0.9);
-  border-radius: 25px;
-  border: 1px solid rgba(255, 166, 0, 0.25);
-}
-
-.whitepaper h2 {
-  text-align: center;
-  color: #ffa500;
-  font-size: 36px;
-}
-
-.wp-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.wp-grid div {
-  padding: 22px;
-  border-radius: 18px;
-  background: #0b1220;
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
-.wp-grid h3 {
-  font-size: 22px;
-  color: #facc15;
-}
-
-.wp-grid p {
+  line-height: 1.7;
   color: #d1d5db;
-  line-height: 1.6;
 }
 
-footer {
-  text-align: center;
-  padding: 25px;
-  color: #9ca3af;
-}
-
-@media (max-width: 700px) {
+@media (max-width: 750px) {
   h1 {
     font-size: 40px;
   }
 
-  .circle {
-    width: 190px;
-    height: 190px;
-    font-size: 46px;
-  }
-
-  .wp-grid {
+  .stats {
     grid-template-columns: 1fr;
   }
 }
