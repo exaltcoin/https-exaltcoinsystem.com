@@ -3,85 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exalt Coin Mining</title>
-  <meta name="description" content="Exalt Coin Web3 mining and reward system on BNB Smart Chain." />
+  <title>Exalt Coin Referral Rewards</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <main class="app">
-    <section class="hero">
-      <div class="badge">EXALT</div>
+<div class="container">
+  <header>
+    <h1>Exalt Coin</h1>
+    <p>Mining • Referral • Reward System</p>
+  </header>
 
-      <h1>Exalt Coin</h1>
-      <h2>Mining & Reward System</h2>
+  <section class="card">
+    <h2>Wallet Dashboard</h2>
+    <p id="walletStatus">Wallet not connected</p>
+    <p id="walletAddress">—</p>
+    <button id="connectBtn">Connect Wallet</button>
+  </section>
 
-      <p class="subtitle">
-        A professional Web3 reward ecosystem built for community growth,
-        daily engagement, and long-term development.
-      </p>
+  <section class="card">
+    <h2>Claim Reward</h2>
 
-      <div class="wallet-box">
-        <p id="walletStatus">Wallet not connected</p>
-        <p id="walletAddress">—</p>
-      </div>
+    <select id="country">
+      <option value="">Select Your Country</option>
+      <option>Pakistan</option>
+      <option>India</option>
+      <option>Kuwait</option>
+      <option>UAE</option>
+      <option>Saudi Arabia</option>
+      <option>UK</option>
+      <option>USA</option>
+      <option>Other</option>
+    </select>
 
-      <div class="circle">
-        <span id="miningStatus">OFF</span>
-      </div>
+    <button id="claimBtn">Claim EXALT Reward</button>
+    <p id="message">Connect wallet to start.</p>
+  </section>
 
-      <h3><span id="balance">0.000000</span> EXALT</h3>
+  <section class="card">
+    <h2>Your Referral Link</h2>
+    <input id="refLink" readonly />
+    <button id="copyBtn">Copy Referral Link</button>
+  </section>
 
-      <button id="connectWalletBtn">Connect Wallet</button>
-      <button id="claimRewardBtn">Claim Reward</button>
+  <section class="stats">
+    <div>
+      <h3 id="refCount">0</h3>
+      <p>Total Referrals</p>
+    </div>
+    <div>
+      <h3 id="refEarned">0 EXALT</h3>
+      <p>Referral Earned</p>
+    </div>
+    <div>
+      <h3 id="totalClaimed">0 EXALT</h3>
+      <p>Total Claimed</p>
+    </div>
+    <div>
+      <h3 id="poolBalance">0 EXALT</h3>
+      <p>Reward Pool</p>
+    </div>
+  </section>
 
-      <p id="message" class="message">MetaMask / Trust Wallet supported</p>
-    </section>
+  <section class="card">
+    <h2>People Joined From Your Referral</h2>
+    <div id="referralList">Connect wallet to view referrals.</div>
+  </section>
 
-    <section class="whitepaper">
-      <h2>Whitepaper Overview</h2>
+  <section class="whitepaper">
+    <h2>Exalt Coin Vision</h2>
+    <p>
+      Exalt Coin is building a professional Web3 reward ecosystem where users can
+      connect wallets, claim rewards, invite community members, and earn referral
+      benefits through a transparent smart contract system.
+    </p>
+  </section>
+</div>
 
-      <div class="wp-grid">
-        <div>
-          <h3>Vision</h3>
-          <p>
-            Exalt Coin aims to build a secure, transparent and community-driven
-            digital reward ecosystem.
-          </p>
-        </div>
-
-        <div>
-          <h3>Mining System</h3>
-          <p>
-            Users connect their wallet and participate in the Exalt Coin mining
-            reward dashboard.
-          </p>
-        </div>
-
-        <div>
-          <h3>Reward System</h3>
-          <p>
-            Rewards depend on the deployed smart contract and available reward
-            balance.
-          </p>
-        </div>
-
-        <div>
-          <h3>Security</h3>
-          <p>
-            Users should never share seed phrases or private keys. Wallet actions
-            must always be verified before approval.
-          </p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    © 2026 Exalt Coin. All rights reserved.
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
-  <script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
