@@ -15,19 +15,19 @@ const ABI = [
 
 const ZERO = "0x0000000000000000000000000000000000000000";
 
-let provider;
-let signer;
-let wallet;
-let contract;
-let wcProvider;
+let provider, signer, wallet, contract, wcProvider;
 
 const walletStatus = document.getElementById("walletStatus");
 const walletAddress = document.getElementById("walletAddress");
 const refLink = document.getElementById("refLink");
 const message = document.getElementById("message");
 
-function shortAddr(address) {
-  return address.slice(0, 6) + "..." + address.slice(-4);
+function isMobile() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+function shortAddr(a) {
+  return a.slice(0, 6) + "..." + a.slice(-4);
 }
 
 async function setupWallet(rawProvider) {
@@ -49,7 +49,6 @@ async function switchToBSC() {
   if (!window.ethereum) return;
 
   const chainId = await window.ethereum.request({ method: "eth_chainId" });
-
   if (chainId === "0x38") return;
 
   try {
@@ -63,11 +62,7 @@ async function switchToBSC() {
       params: [{
         chainId: "0x38",
         chainName: "BNB Smart Chain",
-        nativeCurrency: {
-          name: "BNB",
-          symbol: "BNB",
-          decimals: 18
-        },
+        nativeCurrency: { name: "BNB", symbol: "BNB", decimals: 18 },
         rpcUrls: ["https://bsc-dataseed.binance.org/"],
         blockExplorerUrls: ["https://bscscan.com"]
       }]
@@ -75,54 +70,50 @@ async function switchToBSC() {
   }
 }
 
-async function connectBrowserWallet() {
-  if (!window.ethereum) {
-    alert("No browser wallet found. Use Trust Wallet, MetaMask, or WalletConnect QR.");
-    return;
+async function autoConnectWallet() {
+  try {
+    if (window.ethereum) {
+      await switchToBSC();
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      await setupWallet(window.ethereum);
+      return;
+    }
+
+    if (isMobile()) {
+      const site = "https://exaltcoinsystem.com";
+      window.location.href =
+        "https://link.trustwallet.com/open_url?url=" + encodeURIComponent(site);
+
+      setTimeout(() => {
+        window.location.href = "https://metamask.app.link/dapp/exaltcoinsystem.com";
+      }, 1800);
+
+      return;
+    }
+
+    await connectWalletConnect();
+  } catch (err) {
+    console.error(err);
+    alert("Wallet connection failed.");
   }
-
-  await switchToBSC();
-
-  await window.ethereum.request({
-    method: "eth_requestAccounts"
-  });
-
-  await setupWallet(window.ethereum);
-}
-
-function openTrustWallet() {
-  const url = "https://exaltcoinsystem.com";
-  window.location.href =
-    "https://link.trustwallet.com/open_url?url=" + encodeURIComponent(url);
-}
-
-function openMetaMask() {
-  const url = "exaltcoinsystem.com";
-  window.location.href =
-    "https://metamask.app.link/dapp/" + url;
 }
 
 async function connectWalletConnect() {
-  try {
-    wcProvider = await EthereumProvider.init({
-      projectId: PROJECT_ID,
-      chains: [56],
-      optionalChains: [56],
-      showQrModal: true,
-      metadata: {
-        name: "Exalt Coin",
-        description: "Exalt Coin Mining Referral Reward System",
-        url: "https://exaltcoinsystem.com",
-        icons: ["https://exaltcoinsystem.com/favicon.png"]
-      }
-    });
+  wcProvider = await EthereumProvider.init({
+    projectId: PROJECT_ID,
+    chains: [56],
+    optionalChains: [56],
+    showQrModal: true,
+    metadata: {
+      name: "Exalt Coin",
+      description: "Exalt Coin Mining Referral Reward System",
+      url: "https://exaltcoinsystem.com",
+      icons: ["https://exaltcoinsystem.com/favicon.png"]
+    }
+  });
 
-    await wcProvider.connect();
-    await setupWallet(wcProvider);
-  } catch (err) {
-    console.error(err);
-    alert("WalletConnect failed. Check WalletConnect Cloud domains.");
-  }
+  await wcProvider.connect();
+  await setupWallet(wcProvider);
 }
 
 async function claimReward() {
@@ -132,7 +123,6 @@ async function claimReward() {
   }
 
   const country = document.getElementById("country").value;
-
   if (!country) {
     alert("Please select your country.");
     return;
@@ -147,7 +137,6 @@ async function claimReward() {
 
   try {
     message.innerText = "Sending claim transaction...";
-
     const tx = await contract.claim(referrer, country);
 
     alert("Transaction sent. Please wait.");
@@ -160,7 +149,6 @@ async function claimReward() {
     await loadMyReferrals();
   } catch (err) {
     console.error(err);
-    message.innerText = "Claim failed. Check cooldown, BNB gas, or reward pool.";
     alert("Claim failed. Check cooldown, BNB gas, or reward pool.");
   }
 }
@@ -179,7 +167,7 @@ async function loadStats() {
     document.getElementById("totalClaimed").innerText = ethers.formatEther(claimed) + " EXALT";
     document.getElementById("poolBalance").innerText = ethers.formatEther(pool) + " EXALT";
   } catch (err) {
-    console.error("Stats error:", err);
+    console.error(err);
   }
 }
 
@@ -214,11 +202,10 @@ async function loadMyReferrals() {
         <b>Joined Wallet:</b><br>${joinedWallet}<br><br>
         <b>Country:</b> ${country}
       `;
-
       list.appendChild(div);
     });
   } catch (err) {
-    console.error("Referral load error:", err);
+    console.error(err);
     list.innerHTML = "Could not load referrals.";
   }
 }
@@ -250,9 +237,12 @@ async function disconnectWallet() {
   message.innerText = "Wallet disconnected.";
 }
 
-document.getElementById("connectBrowserBtn").onclick = connectBrowserWallet;
-document.getElementById("openTrustBtn").onclick = openTrustWallet;
-document.getElementById("openMetaMaskBtn").onclick = openMetaMask;
+document.getElementById("connectBrowserBtn").innerText = "Connect Wallet";
+document.getElementById("connectBrowserBtn").onclick = autoConnectWallet;
+
+document.getElementById("openTrustBtn").style.display = "none";
+document.getElementById("openMetaMaskBtn").style.display = "none";
+
 document.getElementById("connectWcBtn").onclick = connectWalletConnect;
 document.getElementById("claimBtn").onclick = claimReward;
 document.getElementById("copyBtn").onclick = copyReferral;
