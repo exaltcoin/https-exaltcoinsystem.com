@@ -18,10 +18,19 @@ let signer;
 let wallet;
 let contract;
 
+let mining = false;
+let miningInterval;
+let miningBalance = Number(localStorage.getItem("exalt_mining_balance")) || 0;
+let miningPower = 1;
+let miningRate = 0.002;
+
 const walletStatus = document.getElementById("walletStatus");
 const walletAddress = document.getElementById("walletAddress");
 const refLink = document.getElementById("refLink");
 const message = document.getElementById("message");
+const miningBalanceEl = document.getElementById("miningBalance");
+const miningStatusEl = document.getElementById("miningStatus");
+const miningPowerEl = document.getElementById("miningPower");
 
 function isMobile() {
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -29,6 +38,12 @@ function isMobile() {
 
 function shortAddress(address) {
   return address.slice(0, 6) + "..." + address.slice(-4);
+}
+
+function updateMiningUI() {
+  miningBalanceEl.innerText = miningBalance.toFixed(4);
+  miningPowerEl.innerText = miningPower.toFixed(2) + "x";
+  localStorage.setItem("exalt_mining_balance", miningBalance.toString());
 }
 
 async function switchToBSC() {
@@ -113,9 +128,42 @@ async function openWalletConnect() {
   }
 }
 
+function startMining() {
+  if (!wallet) {
+    alert("Connect wallet first.");
+    return;
+  }
+
+  if (mining) {
+    alert("Mining already running.");
+    return;
+  }
+
+  mining = true;
+  miningStatusEl.innerText = "ON";
+  message.innerText = "Mining started.";
+
+  miningInterval = setInterval(() => {
+    miningBalance += miningRate * miningPower;
+    updateMiningUI();
+  }, 1000);
+}
+
+function stopMining() {
+  mining = false;
+  clearInterval(miningInterval);
+  miningStatusEl.innerText = "OFF";
+  message.innerText = "Mining stopped.";
+}
+
 async function claimReward() {
   if (!wallet || !contract) {
     alert("Connect wallet first.");
+    return;
+  }
+
+  if (miningBalance <= 0) {
+    alert("Start mining first.");
     return;
   }
 
@@ -134,12 +182,16 @@ async function claimReward() {
   }
 
   try {
+    stopMining();
     message.innerText = "Sending claim transaction...";
 
     const tx = await contract.claim(referrer, country);
 
     alert("Transaction sent. Please wait.");
     await tx.wait();
+
+    miningBalance = 0;
+    updateMiningUI();
 
     message.innerText = "Reward claimed successfully ✅";
     alert("EXALT reward claimed successfully!");
@@ -222,8 +274,12 @@ function copyReferral() {
 }
 
 document.getElementById("connectBtn").onclick = openWalletConnect;
+document.getElementById("startMiningBtn").onclick = startMining;
+document.getElementById("stopMiningBtn").onclick = stopMining;
 document.getElementById("claimBtn").onclick = claimReward;
 document.getElementById("copyBtn").onclick = copyReferral;
+
+updateMiningUI();
 
 window.addEventListener("load", async () => {
   if (window.ethereum) {
