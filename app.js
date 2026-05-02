@@ -25,7 +25,6 @@ async function connectMetaMask() {
     console.log(err);
   }
 }
-
 async function connectWalletConnect() {
   try {
     const wcProvider = await EthereumProvider.init({
@@ -35,6 +34,7 @@ async function connectWalletConnect() {
       rpcMap: {
         56: "https://bsc-dataseed.binance.org/"
       },
+
       metadata: {
         name: "Exalt Coin",
         description: "Exalt Coin Mining System",
