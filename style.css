@@ -1,97 +1,74 @@
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #050b16;
-  color: white;
+  background: #0b0f1a;
+  color: #ffffff;
+}
+
+header {
   text-align: center;
-}
-
-.hero {
-  padding: 60px 20px;
-  background: radial-gradient(circle at top, #173b69, #050b16 65%);
-}
-
-.badge {
-  display: inline-block;
-  padding: 8px 15px;
-  background: rgba(245,197,66,0.15);
-  color: #f5c542;
-  border: 1px solid #f5c542;
-  border-radius: 50px;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #111827, #1e3a8a);
 }
 
 h1 {
-  font-size: 52px;
-  color: #f5c542;
+  margin: 0;
+  font-size: 38px;
+  color: #facc15;
 }
 
-h2 { color: #f5c542; }
+h2 {
+  color: #facc15;
+}
 
-button, a {
-  display: inline-block;
-  margin: 8px;
-  padding: 13px 20px;
-  border-radius: 12px;
-  background: #f5c542;
-  color: #111;
-  font-weight: bold;
-  text-decoration: none;
+button, .tradeBtn {
+  background: #facc15;
+  color: #111827;
+  padding: 12px 20px;
   border: none;
-  cursor: pointer;
-}
-
-.dashboard, .card {
-  background: #0e1b2d;
-  border: 1px solid rgba(245,197,66,0.25);
-  border-radius: 18px;
-  padding: 24px;
-  margin: 20px auto;
-  max-width: 850px;
-}
-
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.card { width: 280px; }
-
-input, select {
-  width: 90%;
-  max-width: 600px;
-  padding: 12px;
-  margin: 10px;
   border-radius: 10px;
-  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 10px;
 }
 
-table {
+button:hover, .tradeBtn:hover {
+  background: #fde047;
+}
+
+.card {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 16px;
+  margin: 20px auto;
+  padding: 20px;
+  width: 92%;
+  max-width: 650px;
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.08);
+}
+
+input {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  font-size: 13px;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #374151;
+  background: #0b0f1a;
+  color: white;
 }
 
-th, td {
-  border: 1px solid rgba(245,197,66,0.25);
-  padding: 10px;
-  word-break: break-all;
-}
-
-th {
-  color: #f5c542;
+a {
+  color: #facc15;
 }
 
 footer {
+  text-align: center;
   padding: 30px;
-  background: #02050a;
-  word-break: break-all;
-}
-
-#wallet, #status {
-  color: #f5c542;
-  font-weight: bold;
+  color: #9ca3af;
 }
