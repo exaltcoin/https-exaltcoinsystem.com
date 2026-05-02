@@ -15,8 +15,10 @@
   <p>Mine • Refer • Earn • Grow with EXALT</p>
 
   <button onclick="connectWallet()">Connect Wallet</button>
-  <a target="_blank" href="https://pancakeswap.finance/swap?outputCurrency=0x341ba9CA7E7872F7E743F9e7eF1b48B9eE314EB8">Buy EXALT</a>
-  <a target="_blank" href="https://dexscreener.com/bsc/0x341ba9CA7E7872F7E743F9e7eF1b48B9eE314EB8">Live Chart</a>
+ <a class="tradeBtn" target="_blank"
+   href="https://pancakeswap.finance/swap?chain=bsc&outputCurrency=0xd9a9236ba831D5d059Fbb5f8238AaFcC3BBe0A78">
+  Buy / Sell EXALT on PancakeSwap
+</a>
 
   <p id="wallet">Wallet not connected</p>
 </header>
@@ -89,9 +91,12 @@
 </section>
 
 <footer>
-  <p>EXALT Contract:</p>
-  <span>0x341ba9CA7E7872F7E743F9e7eF1b48B9eE314EB8</span>
-</footer>
+<p>
+  EXALT Contract:
+  <a target="_blank" href="https://bscscan.com/address/0xd9a9236ba831D5d059Fbb5f8238AaFcC3BBe0A78">
+    0xd9a9236ba831D5d059Fbb5f8238AaFcC3BBe0A78
+  </a>
+</p>  
 
 <script src="app.js"></script>
 </body>
