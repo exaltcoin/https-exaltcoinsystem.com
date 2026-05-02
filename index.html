@@ -3,97 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exalt Coin | Mining System</title>
+  <title>Exalt Coin Whitepaper</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header class="hero">
-  <nav class="nav">
-    <div class="brand">
-      <img src="assets/logo.png" class="logo-img" alt="Exalt Coin">
-      <div>
-        <h2>Exalt Coin</h2>
-        <span>EXALT</span>
-      </div>
-    </div>
-
-    <div class="nav-links">
-  <a href="index.html">Home</a>
-  <a href="packages.html">Packages</a>
-  <a href="tokenomics.html">Tokenomics</a>
-  <a href="roadmap.html">Roadmap</a>
-
-  <a href="whitepaper.html">Whitepaper</a>
-  <a href="whitepaper.pdf" target="_blank">Whitepaper PDF</a>
-
-  <button id="connectBtn">Connect Wallet</button>
-</div>
-  </nav>
-    <div class="hero-text">
-      <span class="badge">BNB Smart Chain</span>
-      <h1>Mine, Refer & Trade Exalt Coin</h1>
-      <p>Claim daily EXALT rewards, invite users, earn referral rewards, and trade on PancakeSwap.</p>
-
-      <div class="hero-buttons">
-        <button id="heroConnectBtn">Start Mining</button>
-        <a class="btn-secondary" target="_blank" href="https://pancakeswap.finance/swap?chain=bsc&outputCurrency=0xd9a9236ba831D5d059Fbb5f8238AaFcC3BBe0A78">
-          Trade on PancakeSwap
-        </a>
-      </div>
-
-      <div class="contract-box">
-        <span>Contract:</span>
-        <code id="contractText">0xd9a9236ba831D5d059Fbb5f8238AaFcC3BBe0A78</code>
-        <button id="copyContractBtn">Copy</button>
-      </div>
-    </div>
-
-    <div class="hero-card">
-      <h3>Live Project Status</h3>
-      <div class="stat-row"><span>Network</span><b>BNB Chain</b></div>
-      <div class="stat-row"><span>Token</span><b>EXALT</b></div>
-      <div class="stat-row"><span>Total Supply</span><b>500,000,000</b></div>
-      <div class="stat-row"><span>Mining</span><b class="green">Active</b></div>
+<nav class="nav">
+  <div class="brand">
+    <img src="logo.png" class="logo-img" alt="Exalt Coin">
+    <div>
+      <h2>Exalt Coin</h2>
+      <span>Whitepaper</span>
     </div>
   </div>
-</header>
 
-<section id="dashboard" class="section">
-  <div class="section-title">
-    <span>Wallet Dashboard</span>
-    <h2>Mining & Rewards</h2>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="packages.html">Packages</a>
+    <a href="tokenomics.html">Tokenomics</a>
+    <a href="roadmap.html">Roadmap</a>
+    <a href="whitepaper.pdf" target="_blank">Download PDF</a>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="whitepaper-box">
+    <img src="logo.png" class="whitepaper-logo" alt="Exalt Coin">
+
+    <span class="badge">Official Whitepaper</span>
+    <h1>Exalt Coin Whitepaper</h1>
+
+    <p>
+      Exalt Coin is a BNB Smart Chain based Web3 reward ecosystem focused on
+      mining rewards, referral earnings, PancakeSwap trading, NFT utility,
+      and long-term community growth.
+    </p>
+
+    <a class="btn-main" href="whitepaper.pdf" target="_blank">
+      Open Whitepaper PDF
+    </a>
   </div>
 
   <div class="grid">
-    <div class="card"><h3>Connected Wallet</h3><p id="walletAddress">Not connected</p></div>
-    <div class="card"><h3>Your Balance</h3><p><span id="tokenBalance">0</span> EXALT</p></div>
-    <div class="card"><h3>Mining Reward</h3><p><span id="miningReward">Loading...</span> EXALT</p></div>
-    <div class="card"><h3>Referral Reward</h3><p><span id="referralReward">Loading...</span> EXALT</p></div>
-  </div>
-
-  <div class="action-card">
-    <h3>Daily Mining Claim</h3>
-    <p>Connect your wallet and claim your daily EXALT mining reward.</p>
-    <input id="referrerInput" placeholder="Optional referrer wallet address">
-    <button id="claimBtn">Claim Mining Reward</button>
-    <p id="claimStatus"></p>
-  </div>
-
-  <div class="action-card">
-    <h3>Your Referral Link</h3>
-    <input id="refLink" readonly>
-    <button id="copyRefBtn">Copy Referral Link</button>
-  </div>
-</section>
-
-<section class="section">
-  <div class="trade-panel">
-    <div>
-      <h3>PancakeSwap Trading</h3>
-      <p>Buy and sell EXALT on PancakeSwap V2.</p>
+    <div class="card">
+      <h3>Total Supply</h3>
+      <p>500,000,000 EXALT</p>
     </div>
-    <a class="btn-main" target="_blank" href="https://pancakeswap.finance/swap?chain=bsc&outputCurrency=0xd9a9236ba831D5d059Fbb5f8238AaFcC3BBe0A78">Open PancakeSwap</a>
+
+    <div class="card">
+      <h3>Mining Rewards</h3>
+      <p>Daily claim-based mining system.</p>
+    </div>
+
+    <div class="card">
+      <h3>Referral System</h3>
+      <p>Users earn rewards by inviting others.</p>
+    </div>
+
+    <div class="card">
+      <h3>Network</h3>
+      <p>BNB Smart Chain</p>
+    </div>
   </div>
 </section>
 
@@ -101,8 +71,5 @@
   <p>© 2026 Exalt Coin. Built on BNB Smart Chain.</p>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-<script src="abi.js"></script>
-<script src="app.js"></script>
 </body>
 </html>
