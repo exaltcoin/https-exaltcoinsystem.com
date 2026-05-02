@@ -117,27 +117,33 @@
     </a>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <h3>Total Supply</h3>
-      <p>500,000,000 EXALT</p>
-    </div>
+ <div class="card">
+  <h3>Mining Dashboard</h3>
 
-    <div class="card">
-      <h3>Mining Rewards</h3>
-      <p>Daily claim-based mining system.</p>
-    </div>
+  <p><b>Wallet:</b> <span id="walletAddress">Not connected</span></p>
+  <p><b>Balance:</b> <span id="tokenBalance">0</span></p>
 
-    <div class="card">
-      <h3>Referral System</h3>
-      <p>Users earn rewards by inviting others.</p>
-    </div>
+  <p><b>Mining Reward:</b> <span id="miningReward">Loading...</span></p>
+  <p><b>Referral Reward:</b> <span id="referralReward">Loading...</span></p>
 
-    <div class="card">
-      <h3>Network</h3>
-      <p>BNB Smart Chain</p>
-    </div>
-  </div>
+  <p><b>Status:</b> <span id="miningStatus">Loading...</span></p>
+  <p><b>Cooldown:</b> <span id="cooldownTimer">Connect wallet</span></p>
+
+  <br>
+
+  <input id="referrerInput" placeholder="Optional referrer address" style="width:100%;padding:10px;border-radius:8px;">
+  
+  <br><br>
+
+  <button id="claimBtn" class="btn-main">Claim Mining Reward</button>
+  <p id="claimStatus"></p>
+
+  <br>
+
+  <input id="refLink" readonly style="width:100%;padding:10px;border-radius:8px;">
+  <br><br>
+  <button id="copyRefBtn" class="btn-main">Copy Referral Link</button>
+</div>
 </section>
 <footer class="footer">
   <h3>Join Exalt Coin Community</h3>
