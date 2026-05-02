@@ -287,4 +287,74 @@ footer {
 
 .footer-social a:hover {
   color: #f5b942;
+}.mining-dashboard {
+  margin-top: 40px;
+  padding: 30px;
+  border: 1px solid rgba(250, 204, 21, 0.25);
+  border-radius: 28px;
+  background: rgba(17, 24, 39, 0.9);
+  box-shadow: 0 0 45px rgba(250, 204, 21, 0.12);
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.dashboard-header h2 {
+  color: #facc15;
+  font-size: 34px;
+}
+
+.dashboard-header p {
+  color: #a1a1aa;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.dash-card, .claim-box {
+  background: rgba(7, 10, 18, 0.85);
+  border: 1px solid rgba(250, 204, 21, 0.18);
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.dash-card span {
+  display: block;
+  color: #a1a1aa;
+  margin-bottom: 8px;
+}
+
+.dash-card b {
+  color: #facc15;
+  word-break: break-all;
+}
+
+.claim-box {
+  margin-top: 18px;
+}
+
+.claim-box h3 {
+  color: #facc15;
+}
+
+.claim-box input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(250, 204, 21, 0.25);
+  background: #070a12;
+  color: white;
+  margin: 10px 0;
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 }
