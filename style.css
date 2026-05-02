@@ -250,4 +250,9 @@ footer {
   color: #a1a1aa;
   font-size: 18px;
   line-height: 1.7;
+}.logo-img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
 }
