@@ -117,28 +117,57 @@
     </a>
   </div>
 
- <div class="card">
-  <h3>Mining Dashboard</h3>
+<div class="mining-dashboard">
+  <div class="dashboard-header">
+    <h2>EXALT Mining Dashboard</h2>
+    <p>Connect your wallet, claim daily rewards, and share your referral link.</p>
+  </div>
 
-  <p><b>Wallet:</b> <span id="walletAddress">Not connected</span></p>
-  <p><b>Balance:</b> <span id="tokenBalance">0</span></p>
+  <div class="dashboard-grid">
+    <div class="dash-card">
+      <span>Wallet</span>
+      <b id="walletAddress">Not connected</b>
+    </div>
 
-  <p><b>Mining Reward:</b> <span id="miningReward">Loading...</span></p>
-  <p><b>Referral Reward:</b> <span id="referralReward">Loading...</span></p>
+    <div class="dash-card">
+      <span>Your Balance</span>
+      <b><span id="tokenBalance">0</span> EXALT</b>
+    </div>
 
-  <p><b>Status:</b> <span id="miningStatus">Loading...</span></p>
-  <p><b>Cooldown:</b> <span id="cooldownTimer">Connect wallet</span></p>
+    <div class="dash-card">
+      <span>Mining Reward</span>
+      <b><span id="miningReward">Loading...</span> EXALT</b>
+    </div>
 
-  <br>
+    <div class="dash-card">
+      <span>Referral Reward</span>
+      <b><span id="referralReward">Loading...</span> EXALT</b>
+    </div>
 
-  <input id="referrerInput" placeholder="Optional referrer address" style="width:100%;padding:10px;border-radius:8px;">
-  
-  <br><br>
+    <div class="dash-card">
+      <span>Mining Status</span>
+      <b id="miningStatus">Loading...</b>
+    </div>
 
-  <button id="claimBtn" class="btn-main">Claim Mining Reward</button>
-  <p id="claimStatus"></p>
+    <div class="dash-card">
+      <span>Next Claim</span>
+      <b id="cooldownTimer">Connect wallet</b>
+    </div>
+  </div>
 
-  <br>
+  <div class="claim-box">
+    <h3>Claim Daily Mining Reward</h3>
+    <input id="referrerInput" placeholder="Optional referrer wallet address">
+    <button id="claimBtn" class="btn-main">Claim Mining Reward</button>
+    <p id="claimStatus"></p>
+  </div>
+
+  <div class="claim-box">
+    <h3>Your Referral Link</h3>
+    <input id="refLink" readonly placeholder="Connect wallet to generate referral link">
+    <button id="copyRefBtn" class="btn-main">Copy Referral Link</button>
+  </div>
+</div>
 
   <input id="refLink" readonly style="width:100%;padding:10px;border-radius:8px;">
   <br><br>
