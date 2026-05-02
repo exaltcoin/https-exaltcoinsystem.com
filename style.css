@@ -357,4 +357,20 @@ footer {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
+}/* ==== Mining Buttons Style ==== */
+.btn-main {
+  background: linear-gradient(135deg, #facc15, #f59e0b);
+  color: #111;
+  padding: 12px 22px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px;
+  transition: 0.3s;
+}
+
+.btn-main:hover {
+  box-shadow: 0 0 15px gold;
+  transform: scale(1.05);
 }
