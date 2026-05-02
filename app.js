@@ -42,9 +42,8 @@ async function connectWallet() {
     userAddress = await signer.getAddress();
 
     contract = new ethers.Contract(CONTRACT_ADDRESS, EXALT_ABI, signer);
-
-    setText("connectBtn", userAddress.slice(0, 6) + "..." + userAddress.slice(-4));
-    setText("heroConnectBtn", "Wallet Connected");
+   setText("heroConnectBtn", userAddress.slice(0, 6) + "..." + userAddress.slice(-4));
+  
     setText("walletAddress", userAddress);
 
     createReferralLink();
