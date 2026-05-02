@@ -265,4 +265,26 @@ footer {
   display: flex;
   align-items: center;
   gap: 10px;
+}.footer {
+  background: #111;
+  padding: 40px;
+  text-align: center;
+  color: #fff;
+  margin-top: 60px;
+}
+
+.footer h3 {
+  margin-bottom: 15px;
+  color: #f5b942;
+}
+
+.footer-social a {
+  margin: 0 10px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.footer-social a:hover {
+  color: #f5b942;
 }
