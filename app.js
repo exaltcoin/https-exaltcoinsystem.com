@@ -8,7 +8,7 @@ let userAddress;
 
 async function connectWallet() {
   if (!window.ethereum) {
-    alert("Please install MetaMask or Trust Wallet browser.");
+    alert("Please open this website in MetaMask or Trust Wallet browser.");
     return;
   }
 
@@ -33,6 +33,8 @@ async function connectWallet() {
           blockExplorerUrls: ["https://bscscan.com"]
         }]
       });
+    } else {
+      console.error(switchError);
     }
   }
 
@@ -44,23 +46,24 @@ async function connectWallet() {
 
   contract = new ethers.Contract(CONTRACT_ADDRESS, EXALT_ABI, signer);
 
-  document.getElementById("walletAddress").innerText =
-    userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+  const shortAddress = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+  setText("walletAddress", shortAddress);
 
   createReferralLink();
   await loadTokenInfo();
 }
 
 async function loadTokenInfo() {
-  try {
-    const name = await contract.name();
-    const symbol = await contract.symbol();
-    const balance = await contract.balanceOf(userAddress);
+  if (!contract || !userAddress) return;
 
-    document.getElementById("tokenName").innerText = name;
-    document.getElementById("tokenSymbol").innerText = symbol;
-    document.getElementById("tokenBalance").innerText =
-      Number(ethers.utils.formatUnits(balance, 18)).toLocaleString();
+  try {
+    const balance = await contract.balanceOf(userAddress);
+    const miningReward = await contract.miningReward();
+    const referralReward = await contract.referralReward();
+
+    setText("tokenBalance", formatToken(balance));
+    setText("miningReward", formatToken(miningReward));
+    setText("referralReward", formatToken(referralReward));
   } catch (error) {
     console.error(error);
   }
@@ -84,31 +87,86 @@ async function claimMining() {
   }
 
   try {
-    document.getElementById("claimStatus").innerText = "Transaction pending...";
+    setText("claimStatus", "Waiting for wallet confirmation...");
     const tx = await contract.claimMining(referrer);
+
+    setText("claimStatus", "Transaction submitted. Waiting confirmation...");
     await tx.wait();
 
-    document.getElementById("claimStatus").innerText = "Mining reward claimed successfully!";
+    setText("claimStatus", "Mining reward claimed successfully.");
     await loadTokenInfo();
   } catch (error) {
     console.error(error);
-    document.getElementById("claimStatus").innerText =
-      "Claim failed. Wait 24 hours or check reward wallet.";
+
+    let msg = "Claim failed. Please check cooldown, gas fee, or reward wallet.";
+    if (error && error.message && error.message.includes("Wait")) {
+      msg = "You already claimed. Please wait 24 hours.";
+    }
+    if (error && error.message && error.message.includes("Mining paused")) {
+      msg = "Mining is currently paused.";
+    }
+    if (error && error.message && error.message.includes("Reward wallet empty")) {
+      msg = "Reward wallet is empty.";
+    }
+
+    setText("claimStatus", msg);
   }
 }
 
 function createReferralLink() {
+  if (!userAddress) return;
+
   const link = `${window.location.origin}${window.location.pathname}?ref=${userAddress}`;
-  document.getElementById("refLink").value = link;
+  const input = document.getElementById("refLink");
+
+  if (input) input.value = link;
 }
 
 function copyReferralLink() {
   const input = document.getElementById("refLink");
+  if (!input || !input.value) {
+    alert("Connect wallet first.");
+    return;
+  }
+
   input.select();
   document.execCommand("copy");
-  alert("Referral link copied!");
+  alert("Referral link copied.");
 }
 
-document.getElementById("connectBtn").addEventListener("click", connectWallet);
-document.getElementById("claimBtn").addEventListener("click", claimMining);
-document.getElementById("copyRefBtn").addEventListener("click", copyReferralLink);
+function copyContract() {
+  navigator.clipboard.writeText(CONTRACT_ADDRESS);
+  alert("Contract address copied.");
+}
+
+function formatToken(value) {
+  return Number(ethers.utils.formatUnits(value, 18)).toLocaleString(undefined, {
+    maximumFractionDigits: 4
+  });
+}
+
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.innerText = value;
+}
+
+function setupEvents() {
+  const connectBtn = document.getElementById("connectBtn");
+  const heroConnectBtn = document.getElementById("heroConnectBtn");
+  const claimBtn = document.getElementById("claimBtn");
+  const copyRefBtn = document.getElementById("copyRefBtn");
+  const copyContractBtn = document.getElementById("copyContractBtn");
+
+  if (connectBtn) connectBtn.addEventListener("click", connectWallet);
+  if (heroConnectBtn) heroConnectBtn.addEventListener("click", connectWallet);
+  if (claimBtn) claimBtn.addEventListener("click", claimMining);
+  if (copyRefBtn) copyRefBtn.addEventListener("click", copyReferralLink);
+  if (copyContractBtn) copyContractBtn.addEventListener("click", copyContract);
+}
+
+window.addEventListener("load", setupEvents);
+
+if (window.ethereum) {
+  window.ethereum.on("accountsChanged", () => window.location.reload());
+  window.ethereum.on("chainChanged", () => window.location.reload());
+}
