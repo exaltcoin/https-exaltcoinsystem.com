@@ -255,4 +255,16 @@ footer {
   height: 52px;
   border-radius: 50%;
   object-fit: cover;
+}.logo-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
