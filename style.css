@@ -371,6 +371,30 @@ footer {
 }
 
 .btn-main:hover {
-  box-shadow: 0 0 15px gold;
+  box-shadow: 0 0 15px gold;/* Mobile Pro Logo Fix */
+.logo {
+  width: 68px !important;
+  height: 68px !important;
+  display: block;
+  margin: 0 auto 10px auto;
+  object-fit: contain;
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(250, 204, 21, 0.35);
+}
+
+/* Mobile header spacing */
+.hero {
+  padding: 18px 14px !important;
+}
+
+.hero h1 {
+  font-size: 26px !important;
+  margin: 8px 0 4px;
+}
+
+.hero p {
+  font-size: 13px;
+  margin: 0;
+}
   transform: scale(1.05);
 }
