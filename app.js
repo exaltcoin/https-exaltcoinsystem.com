@@ -28,7 +28,7 @@ async function connectMetaMask() {
 async function connectWalletConnect() {
   try {
     const wcProvider = await EthereumProvider.init({
-      projectId: WC_PROJECT_ID,
+      projectId: WC_PROJECT_ID,"045db1fe4b635b1717c0b55c03472a29",
       chains: [56],
       showQrModal: true,
       rpcMap: {
