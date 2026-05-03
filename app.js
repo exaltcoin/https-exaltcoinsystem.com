@@ -12,13 +12,9 @@ let provider, signer, contract, userAddress;
 async function connectMetaMask() {
   alert("Use Trust Wallet / QR button in Telegram");
 }
+
 async function connectWalletConnect() {
   try {
-    if (!EthereumProvider) {
-      alert("WalletConnect failed to load. Reload app.");
-      return;
-    }
-
     const wcProvider = await EthereumProvider.init({
       projectId: "045db1fe4b635b1717c0b55c03472a29",
       chains: [56],
@@ -33,6 +29,21 @@ async function connectWalletConnect() {
         icons: ["https://exaltcoinsystem.com/logo.png"]
       }
     });
+
+    await wcProvider.connect();
+
+    provider = new ethers.BrowserProvider(wcProvider);
+    signer = await provider.getSigner();
+    userAddress = await signer.getAddress();
+
+    setText("walletAddress", userAddress);
+    alert("Wallet connected ✅");
+
+  } catch (err) {
+    console.log(err);
+    alert("WalletConnect failed ❌");
+  }
+}
 
     await wcProvider.connect();
 
