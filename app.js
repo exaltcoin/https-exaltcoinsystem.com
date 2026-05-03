@@ -1,3 +1,7 @@
+async function connectWalletConnect() {
+  alert("WalletConnect button clicked");
+
+  try {
 const EthereumProvider = window.EthereumProvider;
 const tg = window.Telegram?.WebApp;
 if (tg) {
