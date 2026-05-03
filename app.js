@@ -123,7 +123,7 @@ function formatToken(value) {
 function setText(id, value) {
   const el = document.getElementById(id);
   if (el) el.innerText = value;
-}
+}document.getElementById("claimBtn").addEventListener("click", claimMining);
 
 window.addEventListener("load", () => {
   document.getElementById("heroConnectBtn")?.addEventListener("click", connectMetaMask);
