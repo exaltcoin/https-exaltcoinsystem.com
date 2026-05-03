@@ -3,235 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exalt Coin Whitepaper</title>
+  <title>Exalt Coin Mini App</title>
   <link rel="stylesheet" href="style.css" />
+
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.23.8/dist/index.umd.min.js"></script>  
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script> 
+  <script src="https://unpkg.com/@walletconnect/ethereum-provider@2.23.8/dist/index.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
 </head>
+
 <body>
+  <main class="app">
+    <header class="hero">
+      <img src="logo.png" class="logo" onerror="this.style.display='none'" />
+      <h1>Exalt Coin</h1>
+      <p>Telegram Mini App • Mining • Referral • Web3</p>
+    </header>
 
-<nav class="nav">
-  <div class="brand">
-    <img src="logo.png" class="logo-img" alt="Exalt Coin">
-    <div>
-      <h2>Exalt Coin</h2>
-      <span>Whitepaper</span>
-    </div>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="packages.html">Packages</a>
-    <a href="tokenomics.html">Tokenomics</a>
-    <a href="roadmap.html">Roadmap</a>
-    <a href="whitepaper.pdf" target="_blank">Download PDF</a>
-  </div>
-    </<div class="social-links">
-  <a href="https://x.com/exalt_coin?s=21" target="_blank">X</a>
-  <a href="https://t.me/exaltcommunity" target="_blank">Telegram</a>
-  <a href="https://discord.gg/MzB7Rf26f" target="_blank">Discord</a>
-  <a href="https://www.reddit.com/r/Exaltcoinoffical/s/m6ggXUVbXr" target="_blank">Reddit</a>
-</div>>
-</nav>
+    <section class="card">
+      <h2>Mining Dashboard</h2>
 
-<section class="section">
-  <div class="mining-dashboard">
-    <div class="dashboard-header">
-      <img src="logo.png" class="whitepaper-logo" alt="Exalt Coin">
-      <span class="badge">BNB Smart Chain</span>
-      <h2>EXALT Mining & Rewards</h2>
-      <p>Connect your wallet, claim daily EXALT rewards, and earn referral bonuses.</p>
-    </div>
-<div class="actions">
-  <button id="heroConnectBtn" class="btn-main" onclick="connectMetaMask()">Connect Wallet</button>
-
-  <button id="walletConnectBtn" class="btn-main" onclick="connectWalletConnect()">Trust Wallet / QR</button>
-
-  <button id="claimBtn" class="btn-main" onclick="claimMining()">Start Mining / Claim Reward</button>
-</div>
-    <div class="dashboard-grid">
-      <div class="dash-card">
-        <span>Wallet</span>
-        <b id="walletAddress">Not connected</b>
+      <div class="actions">
+        <button class="btn secondary" onclick="connectMetaMask()">Connect Wallet</button>
+        <button class="btn" onclick="connectWalletConnect()">Trust Wallet / QR</button>
+        <button class="btn gold" onclick="claimMining()">Claim Mining Reward</button>
       </div>
 
-      <div class="dash-card">
-        <span>Your Balance</span>
-        <b><span id="tokenBalance">0</span> EXALT</b>
+      <div class="stats">
+        <div><span>Telegram User</span><b id="telegramUser">Loading...</b></div>
+        <div><span>Wallet</span><b id="walletAddress">Not connected</b></div>
+        <div><span>Token Balance</span><b id="tokenBalance">0.00 EXALT</b></div>
+        <div><span>Mining Reward</span><b id="miningReward">0.00 EXALT</b></div>
+        <div><span>Referral Reward</span><b id="referralReward">0.00 EXALT</b></div>
+        <div><span>Referral Count</span><b id="referralCount">0</b></div>
+        <div><span>Status</span><b id="miningStatus">Connect wallet</b></div>
       </div>
+    </section>
 
-      <div class="dash-card">
-        <span>Mining Reward</span>
-        <b><span id="miningReward">Loading...</span> EXALT</b>
+    <section class="card">
+      <h2>Referral</h2>
+      <code id="referralLink">Connect wallet first</code>
+      <button class="btn secondary" onclick="copyReferral()">Copy Referral Link</button>
+    </section>
+
+    <section class="card">
+      <h2>Official Links</h2>
+      <div class="links">
+        <a href="https://pancakeswap.finance/swap?outputCurrency=0xd9a9236ba831D5d059Fbb5f8238AaFcC3BBe0A78" target="_blank">Buy on PancakeSwap</a>
+        <a href="https://dexscreener.com" target="_blank">Live Chart</a>
+        <a href="whitepaper.pdf" target="_blank">Whitepaper</a>
       </div>
+    </section>
+  </main>
 
-      <div class="dash-card">
-        <span>Referral Reward</span>
-        <b><span id="referralReward">Loading...</span> EXALT</b>
-      </div>
-
-      <div class="dash-card">
-        <span>Status</span>
-        <b id="miningStatus">Loading...</b>
-      </div>
-
-      <div class="dash-card">
-        <span>Next Claim</span>
-        <b id="cooldownTimer">Connect wallet</b>
-      </div>
-    </div>
-
-    <div class="claim-box">
-      <h3>Claim Daily Mining Reward</h3>
-      <input id="referrerInput" placeholder="Optional referrer wallet address">
-      <button id="claimBtn" class="btn-main">Claim Mining Reward</button>
-      <p id="claimStatus"></p>
-    </div>
-
-    <div class="claim-box">
-      <h3>Your Referral Link</h3>
-      <input id="refLink" readonly placeholder="Connect wallet to generate referral link">
-      <button id="copyRefBtn" class="btn-main">Copy Referral Link</button>
-    </div>
-  </div>
-</section>
-
-    <p>
-      Exalt Coin is a BNB Smart Chain based Web3 reward ecosystem focused on
-      mining rewards, referral earnings, PancakeSwap trading, NFT utility,
-      and long-term community growth.
-    </p>
-
-    <a class="btn-main" href="whitepaper.pdf" target="_blank">
-      Open Whitepaper PDF
-    </a>
-  </div>
-
-  <div class="grid">
-    <div class="card">
-      <h3>Total Supply</h3>
-      <p>500,000,000 EXALT</p>
-    </div>
-
-    <div class="card">
-      <h3>Mining Rewards</h3>
-      <p>Daily claim-based mining system.</p>
-    </div>
-
-    <div class="card">
-      <h3>Referral System</h3>
-      <p>Users earn rewards by inviting others.</p>
-    </div>
-
-    <div class="card">
-      <h3>Network</h3>
-      <p>BNB Smart Chain</p>
-    </div>
-  </div>
-</section>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exalt Coin Whitepaper</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-
-<nav class="nav">
-  <div class="brand">
-    <img src="logo.png" class="logo-img" alt="Exalt Coin">
-    <div>
-      <h2>Exalt Coin</h2>
-      <span>Whitepaper</span>
-    </div>
-  </div>
-
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="packages.html">Packages</a>
-    <a href="tokenomics.html">Tokenomics</a>
-    <a href="roadmap.html">Roadmap</a>
-    <a href="whitepaper.pdf" target="_blank">Download PDF</a>
-  </div>
-</nav>
-<div class="mining-dashboard">
-  <div class="dashboard-header">
-    <h2>EXALT Mining Dashboard</h2>
-
-  <button id="heroConnectBtn" class="btn-main">Connect Wallet</button>
-  <button id="walletConnectBtn" class="btn-main">Trust Wallet / QR</button>
-  <button id="claimBtn" class="btn-main">Start Mining / Claim Reward</button>
-  <p id="claimStatus"></p>
-</div> 
-  <div class="dashboard-grid">
-    <div class="dash-card">
-      <span>Wallet</span>
-      <b id="walletAddress">Not connected</b>
-    </div>
-
-    <div class="dash-card">
-      <span>Your Balance</span>
-      <b><span id="tokenBalance">0</span> EXALT</b>
-    </div>
-
-    <div class="dash-card">
-      <span>Mining Reward</span>
-      <b><span id="miningReward">Loading...</span> EXALT</b>
-    </div>
-
-    <div class="dash-card">
-      <span>Referral Reward</span>
-      <b><span id="referralReward">Loading...</span> EXALT</b>
-    </div>
-
-    <div class="dash-card">
-      <span>Mining Status</span>
-      <b id="miningStatus">Loading...</b>
-    </div>
-
-    <div class="dash-card">
-      <span>Next Claim</span>
-      <b id="cooldownTimer">Connect wallet</b>
-    </div>
-  </div>
-
-  <div class="claim-box">
-    <h3>Claim Daily Mining Reward</h3>
-    <input id="referrerInput" placeholder="Optional referrer wallet address">
-    <button id="claimBtn" class="btn-main">Claim Mining Reward</button>
-    <p id="claimStatus"></p>
-  </div>
-
-  <div class="claim-box">
-    <h3>Your Referral Link</h3>
-    <input id="refLink" readonly placeholder="Connect wallet to generate referral link">
-    <button id="copyRefBtn" class="btn-main">Copy Referral Link</button>
-  </div>
-</div>
-
-  <input id="refLink" readonly style="width:100%;padding:10px;border-radius:8px;">
-  <br><br>
-  <button id="copyRefBtn" class="btn-main">Copy Referral Link</button>
-</div>
-</section>
-<footer class="footer">
-  <h3>Join Exalt Coin Community</h3>
-
-  <div class="social-links footer-social">
-    <a href="https://x.com/exalt_coin?s=21" target="_blank">X</a>
-    <a href="https://t.me/exaltcommunity" target="_blank">Telegram</a>
-    <a href="https://discord.gg/MzB7Rf26f" target="_blank">Discord</a>
-    <a href="https://www.reddit.com/r/Exaltcoinoffical/s/m6ggXUVbXr" target="_blank">Reddit</a>
-  </div>
-
-  <p>© 2026 Exalt Coin. All rights reserved.</p>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-<script src="abi.js"></script>
-<script type="module" src="app.js"></script>
-
+  <script src="abi.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
