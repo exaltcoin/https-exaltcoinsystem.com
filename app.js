@@ -1,4 +1,9 @@
-import EthereumProvider from "https://esm.sh/@walletconnect/ethereum-provider@2.23.8";
+const tg = window.Telegram?.WebApp;
+if (tg) {
+  tg.ready();
+  tg.expand();
+}
+const EthereumProvider = window.EthereumProvider;
 
 const CONTRACT_ADDRESS = "0xd9a9236ba831D5d059Fbb5f8238AaFcC3BBe0A78";
 const BSC_CHAIN_ID_HEX = "0x38";
@@ -27,14 +32,18 @@ async function connectMetaMask() {
 }
 async function connectWalletConnect() {
   try {
+    if (!EthereumProvider) {
+      alert("WalletConnect failed to load. Reload app.");
+      return;
+    }
+
     const wcProvider = await EthereumProvider.init({
-      projectId:"045db1fe4b635b1717c0b55c03472a29",
+      projectId: "045db1fe4b635b1717c0b55c03472a29",
       chains: [56],
       showQrModal: true,
       rpcMap: {
         56: "https://bsc-dataseed.binance.org/"
       },
-
       metadata: {
         name: "Exalt Coin",
         description: "Exalt Coin Mining System",
@@ -44,10 +53,22 @@ async function connectWalletConnect() {
     });
 
     await wcProvider.connect();
-    await setupWallet(wcProvider);
+
+    provider = new ethers.BrowserProvider(wcProvider);
+    signer = await provider.getSigner();
+    userAddress = await signer.getAddress();
+
+    setText("walletAddress", userAddress);
+
+    contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+
+    alert("Wallet connected ✅");
+
+    await loadMiningInfo();
+
   } catch (err) {
-    alert("WalletConnect failed.");
     console.log(err);
+    alert("WalletConnect failed ❌");
   }
 }
 
