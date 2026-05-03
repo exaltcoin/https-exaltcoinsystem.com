@@ -41,7 +41,13 @@
       <h2>EXALT Mining & Rewards</h2>
       <p>Connect your wallet, claim daily EXALT rewards, and earn referral bonuses.</p>
     </div>
+<div class="actions">
+  <button id="heroConnectBtn" class="btn-main" onclick="connectMetaMask()">Connect Wallet</button>
 
+  <button id="walletConnectBtn" class="btn-main" onclick="connectWalletConnect()">Trust Wallet / QR</button>
+
+  <button id="claimBtn" class="btn-main" onclick="claimMining()">Start Mining / Claim Reward</button>
+</div>
     <div class="dashboard-grid">
       <div class="dash-card">
         <span>Wallet</span>
@@ -223,7 +229,6 @@
   <p>© 2026 Exalt Coin. All rights reserved.</p>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 <script src="abi.js"></script>
 <script type="module" src="app.js"></script>
