@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Exalt Coin Mini App</title>
+
   <link rel="stylesheet" href="style.css" />
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -13,46 +14,117 @@
 
 <body>
   <main class="app">
-    <header class="hero">
-      <img src="logo.png" class="logo" onerror="this.style.display='none'" />
-      <h1>Exalt Coin</h1>
-      <p>Telegram Mini App • Mining • Referral • Web3</p>
-    </header>
 
-    <section class="card">
-      <h2>Mining Dashboard</h2>
+    <section id="page-home" class="page active">
+      <div class="hero">
+        <img src="logo.png" class="logo" onerror="this.style.display='none'" />
+        <h1>EXALT Coin</h1>
+        <p>BNB Smart Chain • Mining • Referral • Web3 Rewards</p>
+      </div>
 
-      <div class="actions">
-        <button class="btn secondary" onclick="connectMetaMask()">Connect Wallet</button>
-        <button class="btn" onclick="connectWalletConnect()">Trust Wallet / QR</button>
+      <div class="card">
+        <h2>Official Mini App</h2>
+        <p>Connect your wallet, claim daily EXALT rewards, invite friends, and grow with the Exalt ecosystem.</p>
+        <button class="btn" onclick="showPage('page-mining')">Start Mining</button>
+      </div>
+
+      <div class="card grid2">
+        <div><b>Network</b><span>BNB Chain</span></div>
+        <div><b>Status</b><span id="homeStatus">Live</span></div>
+        <div><b>Token</b><span>EXALT</span></div>
+        <div><b>App</b><span>Telegram Ready</span></div>
+      </div>
+    </section>
+
+    <section id="page-mining" class="page">
+      <div class="title">
+        <h2>Mining Dashboard</h2>
+        <p>Claim real mining reward from your smart contract.</p>
+      </div>
+
+      <div class="card">
+        <button class="btn" onclick="connectWalletConnect()">Trust Wallet / QR Connect</button>
         <button class="btn gold" onclick="claimMining()">Claim Mining Reward</button>
       </div>
 
-      <div class="stats">
-        <div><span>Telegram User</span><b id="telegramUser">Loading...</b></div>
+      <div class="card stats">
         <div><span>Wallet</span><b id="walletAddress">Not connected</b></div>
         <div><span>Token Balance</span><b id="tokenBalance">0.00 EXALT</b></div>
         <div><span>Mining Reward</span><b id="miningReward">0.00 EXALT</b></div>
-        <div><span>Referral Reward</span><b id="referralReward">0.00 EXALT</b></div>
-        <div><span>Referral Count</span><b id="referralCount">0</b></div>
+        <div><span>Next Claim</span><b id="cooldownTimer">Connect wallet</b></div>
         <div><span>Status</span><b id="miningStatus">Connect wallet</b></div>
       </div>
     </section>
 
-    <section class="card">
-      <h2>Referral</h2>
-      <code id="referralLink">Connect wallet first</code>
-      <button class="btn secondary" onclick="copyReferral()">Copy Referral Link</button>
-    </section>
+    <section id="page-referral" class="page">
+      <div class="title">
+        <h2>Referral System</h2>
+        <p>Share your wallet referral link and earn referral rewards.</p>
+      </div>
 
-    <section class="card">
-      <h2>Official Links</h2>
-      <div class="links">
-        <a href="https://pancakeswap.finance/swap?outputCurrency=0xd9a9236ba831D5d059Fbb5f8238AaFcC3BBe0A78" target="_blank">Buy on PancakeSwap</a>
-        <a href="https://dexscreener.com" target="_blank">Live Chart</a>
-        <a href="whitepaper.pdf" target="_blank">Whitepaper</a>
+      <div class="card stats">
+        <div><span>Referral Reward</span><b id="referralReward">0.00 EXALT</b></div>
+        <div><span>Referral Count</span><b id="referralCount">0</b></div>
+        <div><span>Your Referrer</span><b id="referredBy">None</b></div>
+      </div>
+
+      <div class="card">
+        <h3>Your Referral Link</h3>
+        <code id="referralLink">Connect wallet first</code>
+        <button class="btn" onclick="copyReferral()">Copy Referral Link</button>
       </div>
     </section>
+
+    <section id="page-tokenomics" class="page">
+      <div class="title">
+        <h2>Tokenomics</h2>
+        <p>EXALT ecosystem allocation and utilities.</p>
+      </div>
+
+      <div class="card stats">
+        <div><span>Token Name</span><b id="tokenName">Exalt Coin</b></div>
+        <div><span>Symbol</span><b id="tokenSymbol">EXALT</b></div>
+        <div><span>Total Supply</span><b id="totalSupply">Loading...</b></div>
+        <div><span>Mining Pool</span><b>Daily Rewards</b></div>
+        <div><span>Referral Pool</span><b>Community Growth</b></div>
+      </div>
+
+      <div class="card">
+        <h3>Utilities</h3>
+        <ul>
+          <li>Daily mining rewards</li>
+          <li>Wallet referral earning</li>
+          <li>PancakeSwap trading</li>
+          <li>Community ecosystem</li>
+          <li>Future NFT and reward expansion</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="page-links" class="page">
+      <div class="title">
+        <h2>Official Links</h2>
+        <p>Use only official Exalt links.</p>
+      </div>
+
+      <div class="card links">
+        <a href="https://exaltcoinsystem.com" target="_blank">Official Website</a>
+        <a href="https://pancakeswap.finance/swap?outputCurrency=0xd9a9236ba831D5d059Fbb5f8238AaFcC3BBe0A78" target="_blank">Buy on PancakeSwap</a>
+        <a href="https://dexscreener.com" target="_blank">Live Chart</a>
+        <a href="whitepaper.pdf" target="_blank">Whitepaper PDF</a>
+        <a href="https://t.me/exaltcommunity" target="_blank">Telegram Community</a>
+        <a href="https://x.com/exalt_coin?s=21" target="_blank">X / Twitter</a>
+      </div>
+    </section>
+
+    <nav class="bottom-nav">
+      <button onclick="showPage('page-home')">Home</button>
+      <button onclick="showPage('page-mining')">Mining</button>
+      <button onclick="showPage('page-referral')">Referral</button>
+      <button onclick="showPage('page-tokenomics')">Token</button>
+      <button onclick="showPage('page-links')">Links</button>
+    </nav>
+
   </main>
 
   <script src="abi.js"></script>
