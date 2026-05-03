@@ -90,14 +90,18 @@ async function claimMining() {
   }
 
   try {
-    setText("claimStatus", "Confirm transaction in wallet...");
+    document.getElementById("claimStatus").innerText = "Processing...";
 
-    const tx = await contract.claimMining(
-      "0x0000000000000000000000000000000000000000"
-    );
-
-    setText("claimStatus", "Transaction submitted...");
+    const tx = await contract.claimMining();
     await tx.wait();
+
+    document.getElementById("claimStatus").innerText = "Success ✅";
+
+  } catch (err) {
+    console.log(err);
+    document.getElementById("claimStatus").innerText = "Failed ❌";
+  }
+}
 
     setText("claimStatus", "Mining reward claimed successfully ✅");
     await loadMiningInfo();
