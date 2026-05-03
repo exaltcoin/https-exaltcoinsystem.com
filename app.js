@@ -1,34 +1,16 @@
+const EthereumProvider = window.EthereumProvider;
 const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
 }
-const EthereumProvider = window.EthereumProvider;
-
 const CONTRACT_ADDRESS = "0xd9a9236ba831D5d059Fbb5f8238AaFcC3BBe0A78";
 const BSC_CHAIN_ID_HEX = "0x38";
 const WC_PROJECT_ID = "045db1fe4b635b1717c0b55c03472a29";
 
 let provider, signer, contract, userAddress;
-
 async function connectMetaMask() {
-  if (!window.ethereum) {
-    alert("Please install MetaMask or open in Trust Wallet browser.");
-    return;
-  }
-
-  try {
-    await window.ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: BSC_CHAIN_ID_HEX }]
-    });
-
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-    await setupWallet(window.ethereum);
-  } catch (err) {
-    alert("MetaMask connection failed.");
-    console.log(err);
-  }
+  alert("Use Trust Wallet / QR button in Telegram");
 }
 async function connectWalletConnect() {
   try {
