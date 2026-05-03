@@ -9,7 +9,7 @@ app.use(express.static("public"));
 
 const PORT = process.env.PORT || 3000;
 
-// temporary database
+// temporary databaseAA
 const users = {};
 const MINING_RATE_PER_SECOND = 0.0001;
 const MAX_SESSION_MS = 24 * 60 * 60 * 1000;
@@ -17,7 +17,7 @@ const MAX_SESSION_MS = 24 * 60 * 60 * 1000;
 function getUser(wallet) {
   const key = wallet.toLowerCase();
   if (!users[key]) {
-    users[key] = {
+    users[key] = {A
       wallet: key,
       balance: 0,
       miningStartedAt: null
